@@ -356,15 +356,15 @@
                 afterPrint: null // function called before iframe is removed
             });
         }
-        document.addEventListener('keydown', function(event) {
-            if (event.code === 'Space') {
-                event.preventDefault(); 
-                print(); 
-            }
-        });
-        $('#printButton').on('click', function() {
-            print(); 
-        });
+        // document.addEventListener('keydown', function(event) {
+        //     if (event.code === 'Space') {
+        //         event.preventDefault(); 
+        //         print(); 
+        //     }
+        // });
+        // $('#printButton').on('click', function() {
+        //     print(); 
+        // });
         function formatDate(dateStr) {
             let [day, month, year] = dateStr.split('/');
             return `Ngày ${day}, Tháng ${month} Năm ${year}`;
