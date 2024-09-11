@@ -449,6 +449,87 @@ function setFormattedNumbersFromParameters() {
 
 // Gọi hàm để xử lý và set các giá trị
 setFormattedNumbersFromParameters();
+// xử lý date
+    // Hàm chuyển đổi định dạng ngày từ mm/dd/yyyy sang dd/mm/yyyy
+    function convertDateFormat(dateStr) {
+        // Tách chuỗi ngày bằng dấu "/"
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+            const month = parts[0];
+            const day = parts[1];
+            const year = parts[2];
+            // Trả về chuỗi theo định dạng dd/mm/yyyy
+            return `${day}/${month}/${year}`;
+        }
+        return dateStr; // Trả về nguyên chuỗi nếu không đúng định dạng
+    }
+
+    // Hàm để lấy giá trị ngày từ URL, chuyển đổi và set cho element
+    function setFormattedDatesFromParameters() {
+        // Danh sách các parameter và ID của element HTML
+        const paramNames = ['nkg','nkt','nvh'];
+        const elementIds = ['nkg','nkt','nvh'];
+
+        paramNames.forEach((paramName, index) => {
+            // Lấy giá trị từ parameter
+            let paramValue = getUrlParameter(paramName);
+
+            if (paramValue) {
+                // Chuyển đổi định dạng ngày từ mm/dd/yyyy sang dd/mm/yyyy
+                let formattedDate = convertDateFormat(paramValue);
+
+                // Set giá trị ngày đã chuyển đổi vào element HTML tương ứng
+                let dateElement = document.getElementById(elementIds[index]);
+                if (dateElement) {
+                    dateElement.innerText = formattedDate;
+                }
+            }
+        });
+    }
+
+    // Gọi hàm để xử lý và set các giá trị
+    setFormattedDatesFromParameters();
+    // Hàm chuyển đổi định dạng mm/dd/yyyy sang "Ngày dd, Tháng mm Năm yyyy"
+function convertDateToText(dateStr) {
+    const monthNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+    
+    // Tách chuỗi ngày bằng dấu "/"
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+        const month = monthNames[parseInt(parts[0], 10) - 1]; // Lấy tháng từ 0-11
+        const day = parseInt(parts[1], 10); // Lấy ngày
+        const year = parts[2]; // Lấy năm
+        // Trả về chuỗi theo định dạng "Ngày dd, Tháng mm Năm yyyy"
+        return `Ngày ${day}, Tháng ${month} Năm ${year}`;
+    }
+    return dateStr; // Trả về nguyên chuỗi nếu không đúng định dạng
+}
+
+// Hàm để lấy giá trị ngày từ URL, chuyển đổi và set vào element
+function setFormattedDateTextFromParameters() {
+    // Danh sách các parameter và ID của element HTML
+    const paramNames = ['nct'];
+    const elementIds = ['nct'];
+
+    paramNames.forEach((paramName, index) => {
+        // Lấy giá trị từ parameter
+        let paramValue = getUrlParameter(paramName);
+
+        if (paramValue) {
+            // Chuyển đổi ngày thành đoạn text
+            let formattedDateText = convertDateToText(paramValue);
+
+            // Set giá trị đã chuyển đổi vào element HTML tương ứng
+            let dateElement = document.getElementById(elementIds[index]);
+            if (dateElement) {
+                dateElement.innerText = formattedDateText;
+            }
+        }
+    });
+}
+
+// Gọi hàm để xử lý và set các giá trị
+setFormattedDateTextFromParameters();
         function print() {
             $('#content').printThis({
                 debug: false, // show the iframe for debugging
