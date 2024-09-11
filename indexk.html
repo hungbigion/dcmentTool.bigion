@@ -20,6 +20,10 @@
 
 
 <style>
+    * {
+        font-family: "Times New Roman", Times, serif;
+    }
+
     body {
         background: rgb(204, 204, 204);
         font-family: "Times New Roman", Times, serif;
@@ -84,7 +88,7 @@
 
     #content {
         font-size: 13.5px;
-
+        width: 100%; margin: 0 auto; font-family: Arial, sans-serif;
     }
 
 
@@ -195,7 +199,7 @@
         class="language_print"></span></button>
     <page size="A4" id="page" layout="portrait">
         <div id="content">
-            <div style="border: none; padding: 10px; display: flex; align-items: center;font-family: 'Times New Roman', Times, serif;"></div>
+            <div style="border: none; padding: 10px; display: flex; align-items: center;font-family: 'Times New Roman', Times, serif;">
                 <div style="flex: 1;">
                     <img src="img/logo_lea.png" alt="LEA Logo" style="width: 150px;">
                 </div>
@@ -304,7 +308,7 @@
             var results = regex.exec(location.search);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
-
+        // goood color #73d18f
         // Function to set text content if element exists
         function setTextContentById(id, value) {
             var element = document.getElementById(id);
@@ -314,7 +318,7 @@
         }
 
         // truyền id vào đây
-        var parameters = ['a' , 'b'];
+        var parameters = ['sct','nct','ten','sdt','lop','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
         parameters.forEach(function (param) {
             var value = getUrlParameter(param);
             setTextContentById(param, value);
@@ -327,7 +331,9 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         function print() {
+
             $('#content').printThis({
                 debug: false, // show the iframe for debugging
                 importCSS: true, // import parent page css
@@ -350,5 +356,98 @@
                 afterPrint: null // function called before iframe is removed
             });
         }
+        document.addEventListener('keydown', function(event) {
+             if (event.code === 'Space') {
+                 event.preventDefault(); 
+                 print(); 
+             }
+         });
+         $('#printButton').on('click', function() {
+             print(); 
+         });
+        function formatDate(dateStr) {
+            let [day, month, year] = dateStr.split('/');
+            return `Ngày ${day}, Tháng ${month} Năm ${year}`;
+        }
+        function updateDates() {
+            let ids = ['nct'];  
+            ids.forEach(id => {
+                let element = document.getElementById(id);
+                if (element) {
+                    let text = element.innerText.trim();
+                    if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) {
+                        element.innerHTML = formatDate(text);
+                    }
+                }
+            });
+        }
+    function numberToWords(num) {
+        const units = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+        const tens = ['mười', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
+        const thousands = ['', 'nghìn', 'triệu', 'tỷ'];
+
+        if (num === 0) return 'Không đồng';
+
+        const convert = (n) => {
+            let str = '';
+            if (n >= 1000) {
+                str += units[Math.floor(n / 1000)] + ' nghìn ';
+                n %= 1000;
+            }
+            if (n >= 100) {
+                str += units[Math.floor(n / 100)] + ' trăm ';
+                n %= 100;
+            }
+            if (n >= 20) {
+                str += tens[Math.floor(n / 10) - 1] + ' ';
+                n %= 10;
+            } else if (n >= 10) {
+                str += 'mười ';
+                n %= 10;
+            }
+            if (n > 0) {
+                str += units[n] + ' ';
+            }
+            return str.trim();
+        };
+
+        let result = '';
+        let unitIndex = 0;
+        while (num > 0) {
+            const chunk = num % 1000;
+            if (chunk > 0) {
+                result = convert(chunk) + ' ' + thousands[unitIndex] + ' ' + result;
+            }
+            num = Math.floor(num / 1000);
+            unitIndex++;
+        }
+
+        return result.trim() + ' đồng';
+    }
+
+    function updateNumbersToText() {
+        const numberIds = ['ttien', 'ttt', 'conlai'];
+        const textIds = ['ttientext', 'ttttext', 'conlaitext'];
+
+        numberIds.forEach((numberId, index) => {
+            let numberElement = document.getElementById(numberId);
+            let textElement = document.getElementById(textIds[index]);
+            
+            if (numberElement && textElement) {
+                let numberText = numberElement.innerText.trim();
+                let numberValue = parseInt(numberText.replace(/\./g, '').replace(/₫/, '').trim(), 10);
+
+                if (!isNaN(numberValue)) {
+                    let textValue = numberToWords(numberValue);
+                    textElement.innerText = textValue;
+                }
+            }
+        });
+    }
+        // window.onload = function() {
+        //     updateNumbersToText();
+        //     updateDates();
+        // };
+
     </script>
 </body>
