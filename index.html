@@ -199,86 +199,7 @@
         class="language_print"></span></button>
     <page size="A4" id="page" layout="portrait">
         <div id="content">
-            <div style="border: none; padding: 10px; display: flex; align-items: center;font-family: 'Times New Roman', Times, serif;">
-                <div style="flex: 1;">
-                    <img src="img/logo_lea.png" alt="LEA Logo" style="width: 150px;">
-                </div>
-                <div style="flex: 3; text-align: center;font-weight: bolder;">
-                    <h2 style="margin: 0; font-size: 16px;font-weight: bolder;">TRUNG TÂM NGOẠI NGỮ LIÊN ÂU MỸ</h2>
-                    <p style="margin: 0; font-size: 14px;">
-                        ĐT: TPK - 02743618998 - TU: 02743639995 - HN: 02746549595 <br>
-                        Websites: www.lea.edu.vn - Hotline: 0274.9999.899
-                    </p>
-                </div>
-            </div>
-            <h4 style="text-align: center;font-family: 'Times New Roman', Times, serif;font-weight: bolder;">PHIẾU THU</h4>
-        
-            <div style="display: flex; justify-content: flex-end; ">
-                <div style="text-align: right;">
-                    <span style="font-style: oblique;">Số chứng từ:&ensp;</span>
-                    <span id="sct"></span>
-                </div>
-            </div>
-            <p><span id="nct">27/09/2024</span></p>
-            <div style="justify-content: space-between;display: flex;padding-right: 200px;">
-                <p><span style="font-weight: bolder;">Tên học viên:&ensp;</span> <span id="ten"></span></p>
-                <p><strong>Số điện thoại:&ensp;</strong><span id="sdt"></span></p>
-            </div>
-        
-            <div>
-                <p><strong>Lớp:&ensp;</strong><span id="lop"></span></p>
-                <div style="justify-content: space-between;display: flex;padding-right: 200px;">                
-                    <p><strong>Ngày khai giảng:&ensp;</strong> <span id="nkg"></span></p>
-                    <p><strong>Ngày kết thúc:&ensp;</strong> <span id="nkt"></span></p>
-                </div>
-                <p><strong>Ngày vào học:&ensp;</strong><span id="nvh"></span></p>
-            </div>
-        
-            <div>
-                <p><strong>Ghi chú:&ensp;</strong><span id="note"></span></p>
-            </div>
-        
-            <div>
-                <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                    <p><strong>Khóa học:&ensp;</strong> <span id="lop"></span></p>
-                    <p><strong>Học phí:&ensp;</strong> <span id="hphi"></span></p>
-                </div>
-                <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                    <p><strong>Giáo trình:&ensp;</strong><span id="tengt"></span></p>
-                    <p><strong>Tiền giáo trình:&ensp;</strong><span style="margin-right: 10;" id="tiengt"></span></p>
-                </div>
-            </div>
-        
-            <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                <p><strong>Ưu đãi: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span></p>
-                <p><strong>Ưu đãi khác: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span></p>
-            </div>
-        
-            <div>
-                <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                    <p><strong>Thành tiền:&ensp;</strong><span id="ttien"></span></p>
-                    <p><strong>Số tiền thanh toán:&ensp;</strong><span id="ttt"></span></p>
-                </div>
-                <p><strong>Còn lại:&ensp;</strong><span id="conlai"></span></p>
-            </div>
-            <div>
-                <p><strong>Tổng tiền bằng chữ:&ensp;</strong><span id="ttientext"></span></p>
-                <p><strong>Số tiền thanh toán bằng chữ:&ensp;</strong><span id="ttttext"></span></p>
-                <p><strong>Còn lại bằng chữ:&ensp;</strong><span id="conlaitext"></span></p>
-            </div>
-        
-            <div style="margin-top: 30px;">
-                <div style="text-align: center; display: flex; justify-content: space-between;padding: 10px 50px 20px 40px ;">
-                    <div><strong>Người lập phiếu </strong><br> (Ký ghi rõ họ tên)</div>
-                    <div><strong>Người nộp tiền</strong> <br> (Ký ghi rõ họ tên)</div>
-                    <div><strong>Thủ trưởng đơn vị</strong> <br> (Ký ghi rõ họ tên)</div>
-                </div>
-            </div>
-        
-            <div style="margin-top: 200px; font-size: 12px;">
-                <p><strong>Lưu ý:</strong> Trung tâm sẽ không hoàn lại học phí trong bất kỳ trường hợp nào <br>
-                Đối với các trường hợp đặc biệt, học phí sẽ được bảo lưu trong thời gian 1 khóa</p>
-            </div>
+            <img src="img/logo_lea.png" alt="">
         </div>
     </page>
 
@@ -318,7 +239,7 @@
         }
 
         // truyền id vào đây
-        var parameters = ['sct','nct','ten','sdt','lop','nkg','nkt','nvh','note','hphi','tengt','pcdc','prdc','ttien','ttt','conlai'];
+        var parameters = ['sct','nct','ten','sdt','lop','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
         parameters.forEach(function (param) {
             var value = getUrlParameter(param);
             setTextContentById(param, value);
