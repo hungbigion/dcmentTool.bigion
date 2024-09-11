@@ -252,24 +252,24 @@
             <div>
                 <div style="justify-content: start;display: flex;">
                     <p class="item"><strong>Khóa học:&ensp;</strong> <span id="khoahoc"></span></p>
-                    <p class="item"><strong>Học phí:&ensp;</strong> <span id="hphi"></span></p>
+                    <p class="item"><strong>Học phí:&ensp;</strong> <span id="hphi"></span> ₫</p>
                 </div>
                 <!-- inline element -->
                 <div style="display: inline;">
                     <p><strong>Giáo trình:&ensp;</strong><span id="tengt"></span></p>
-                    <p><strong>Tiền giáo trình:&ensp;</strong><span id="tiengt"></span></p>
+                    <p><strong>Tiền giáo trình:&ensp;</strong><span id="tiengt"></span> ₫</p>
                 </div>
             </div>
         <!-- inline element -->
             <div style="display: inline;">
-                <p><strong>Ưu đãi: </strong>&ensp;<span id="pcdc"></span>&emsp;&emsp;&emsp;&ensp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span>₫</p>
-                <p><strong>Ưu đãi khác: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi khác: </strong>&ensp;<span id="prdc"></span>₫</p>
+                <p><strong>Ưu đãi: </strong>&ensp;<span id="pcdc"></span>&emsp;&emsp;&emsp;&ensp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span> ₫</p>
+                <p><strong>Ưu đãi khác: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi khác: </strong>&ensp;<span id="prdc"></span> ₫</p>
             </div>
         
             <div>
                 <div style="justify-content: start;display: flex;">
-                    <p class="item"><strong>Thành tiền:&ensp;</strong><span id="ttien"></span>₫</p>
-                    <p class="item"><strong>Số tiền thanh toán:&ensp;</strong><span id="ttt"></span>₫</p>
+                    <p class="item"><strong>Thành tiền:&ensp;</strong><span id="ttien"></span> ₫</p>
+                    <p class="item"><strong>Số tiền thanh toán:&ensp;</strong><span id="ttt"></span> ₫</p>
                 </div>
                 <p><strong>Còn lại:&ensp;</strong><span id="conlai"></span></p>
             </div>
@@ -306,95 +306,9 @@
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
+            var results = regex.exec(window.location.search);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
-        // Function to set text content if element exists
-        function setTextContentById(id, value) {
-            var element = document.getElementById(id);
-            if (element) {
-                element.textContent = value;
-            }
-        }
-// Hàm lấy giá trị từ tham số URL
-function getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-}
-
-// Hàm chuyển đổi số thành chữ
-function numberToWords(num) {
-    const units = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
-    const tens = ['mười', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
-    const thousands = ['', 'nghìn', 'triệu', 'tỷ'];
-
-    if (num === 0) return 'Không đồng';
-
-    const convert = (n) => {
-        let str = '';
-        if (n >= 1000) {
-            str += units[Math.floor(n / 1000)] + ' nghìn ';
-            n %= 1000;
-        }
-        if (n >= 100) {
-            str += units[Math.floor(n / 100)] + ' trăm ';
-            n %= 100;
-        }
-        if (n >= 20) {
-            str += tens[Math.floor(n / 10) - 1] + ' ';
-            n %= 10;
-        } else if (n >= 10) {
-            str += 'mười ';
-            n %= 10;
-        }
-        if (n > 0) {
-            str += units[n] + ' ';
-        }
-        return str.trim();
-    };
-
-    let result = '';
-    let unitIndex = 0;
-    while (num > 0) {
-        const chunk = num % 1000;
-        if (chunk > 0) {
-            result = convert(chunk) + ' ' + thousands[unitIndex] + ' ' + result;
-        }
-        num = Math.floor(num / 1000);
-        unitIndex++;
-    }
-
-    return result.trim() + ' đồng';
-}
-
-// Hàm để xử lý chuỗi số từ URL và cập nhật giá trị chữ trong các phần tử HTML
-function updateNumbersToText() {
-    // Danh sách các tham số URL và ID thẻ cần cập nhật
-    const numberParams = ['ttien', 'ttt', 'conlai'];
-    const textIds = ['ttientext', 'ttttext', 'conlaitext'];
-
-    numberParams.forEach((param, index) => {
-        let numberText = getUrlParameter(param);
-        let textElement = document.getElementById(textIds[index]);
-
-        if (numberText && textElement) {
-            // Loại bỏ dấu chấm và ký hiệu tiền tệ
-            let numberValue = parseInt(numberText.replace(/\./g, '').replace(/₫/, '').trim(), 10);
-
-            if (!isNaN(numberValue)) {
-                // Chuyển đổi số thành chữ
-                let textValue = numberToWords(numberValue);
-                // Cập nhật giá trị chữ vào thẻ HTML
-                textElement.innerText = textValue;
-            }
-        }
-    });
-}
-
-// Gọi hàm để cập nhật giá trị khi trang được tải
-updateNumbersToText();
         // truyền id vào đây
         var parameters = ['sct','nct','ten','sdt','lop','khoahoc','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
         parameters.forEach(function (param) {
@@ -415,6 +329,126 @@ updateNumbersToText();
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        // Function to set text content if element exists
+        function setTextContentById(id, value) {
+            var element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        }
+        // num to text
+        // Hàm chuyển số thành chữ số tiền
+function numberToWords(num) {
+    const units = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+    const teens = ['mười', 'mười một', 'mười hai', 'mười ba', 'mười bốn', 'mười lăm', 'mười sáu', 'mười bảy', 'mười tám', 'mười chín'];
+    const tens = ['', '', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
+    const thousands = ['', 'nghìn', 'triệu', 'tỷ'];
+
+    if (num === 0) return 'không đồng';
+
+    const convertChunk = (n) => {
+        let str = '';
+        
+        if (n >= 100) {
+            str += units[Math.floor(n / 100)] + ' trăm ';
+            n %= 100;
+        }
+
+        if (n >= 20) {
+            str += tens[Math.floor(n / 10)] + ' ';
+            n %= 10;
+        } else if (n >= 10) {
+            str += teens[n - 10] + ' ';
+            n = 0;
+        }
+
+        if (n > 0) {
+            str += units[n] + ' ';
+        }
+
+        return str.trim();
+    };
+
+    let result = '';
+    let unitIndex = 0;
+
+    while (num > 0) {
+        const chunk = num % 1000;
+        if (chunk > 0) {
+            result = convertChunk(chunk) + ' ' + thousands[unitIndex] + ' ' + result;
+        }
+        num = Math.floor(num / 1000);
+        unitIndex++;
+    }
+
+    return result.trim() + ' đồng';
+}
+
+// Hàm để lấy giá trị từ URL, chuyển đổi thành chữ và set cho element
+function setValuesFromParameters() {
+    // Danh sách các parameter và ID của element HTML
+    const paramNames = ['ttien', 'ttt', 'conlai'];
+    const elementIds = ['ttientext', 'ttttext', 'conlaitext'];
+
+    paramNames.forEach((paramName, index) => {
+        // Lấy giá trị từ parameter
+        let paramValue = getUrlParameter(paramName);
+
+        if (paramValue) {
+            // Chuyển đổi giá trị thành số và loại bỏ các ký tự không phải số
+            let numberValue = parseInt(paramValue.replace(/\./g, '').replace(/₫/, '').trim(), 10);
+
+            if (!isNaN(numberValue)) {
+                // Chuyển số thành chữ số tiền
+                let textValue = numberToWords(numberValue);
+
+                // Set giá trị vào element HTML tương ứng
+                let textElement = document.getElementById(elementIds[index]);
+                if (textElement) {
+                    textElement.innerText = textValue;
+                }
+            }
+        }
+    });
+}
+
+// Gọi hàm để xử lý và set các giá trị
+setValuesFromParameters();
+// Hàm định dạng số thành chuỗi có dấu chấm phân cách hàng nghìn
+function formatNumberWithDots(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// Hàm để lấy giá trị từ URL, định dạng và set cho element
+function setFormattedNumbersFromParameters() {
+    // Danh sách các parameter và ID của element HTML
+    const paramNames = ['hphi','tiengt','prdc','ttien','ttt','conlai'];
+    const elementIds = ['hphi','tiengt','prdc','ttien','ttt','conlai'];
+
+    paramNames.forEach((paramName, index) => {
+        // Lấy giá trị từ parameter
+        let paramValue = getUrlParameter(paramName);
+
+        if (paramValue) {
+            // Chuyển giá trị thành số và loại bỏ các ký tự không phải số
+            let numberValue = parseInt(paramValue.replace(/\./g, '').replace(/₫/, '').trim(), 10);
+
+            if (!isNaN(numberValue)) {
+                // Định dạng số thành chuỗi có dấu chấm phân cách hàng nghìn
+                let formattedValue = formatNumberWithDots(numberValue);
+
+                // Set giá trị đã định dạng vào element HTML tương ứng
+                let textElement = document.getElementById(elementIds[index]);
+                if (textElement) {
+                    textElement.innerText = formattedValue;
+                }
+            }
+        }
+    });
+}
+
+// Gọi hàm để xử lý và set các giá trị
+setFormattedNumbersFromParameters();
         function print() {
             $('#content').printThis({
                 debug: false, // show the iframe for debugging
@@ -438,5 +472,6 @@ updateNumbersToText();
                 afterPrint: null // function called before iframe is removed
             });
         }
+        // Gọi hàm để cập nhật giá trị khi trang được tải
     </script>
 </body>
