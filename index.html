@@ -316,7 +316,15 @@
                 element.textContent = value;
             }
         }
-// Hàm để chuyển đổi số thành chữ
+// Hàm lấy giá trị từ tham số URL
+function getUrlParameter(name) {
+    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+    var results = regex.exec(location.search);
+    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+}
+
+// Hàm chuyển đổi số thành chữ
 function numberToWords(num) {
     const units = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
     const tens = ['mười', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
@@ -361,33 +369,32 @@ function numberToWords(num) {
     return result.trim() + ' đồng';
 }
 
-    // Hàm để xử lý chuỗi số và cập nhật giá trị chữ trong thẻ HTML
-    function updateNumbersToText() {
-        // Danh sách các ID của thẻ số và thẻ chữ
-        const numberIds = ['ttien', 'ttt', 'conlai'];
-        const textIds = ['ttientext', 'ttttext', 'conlaitext'];
+// Hàm để xử lý chuỗi số từ URL và cập nhật giá trị chữ trong các phần tử HTML
+function updateNumbersToText() {
+    // Danh sách các tham số URL và ID thẻ cần cập nhật
+    const numberParams = ['ttien', 'ttt', 'conlai'];
+    const textIds = ['ttientext', 'ttttext', 'conlaitext'];
 
-        numberIds.forEach((numberId, index) => {
-            let numberElement = document.getElementById(numberId);
-            let textElement = document.getElementById(textIds[index]);
-            
-            if (numberElement && textElement) {
-                // Lấy giá trị từ thẻ số và loại bỏ dấu chấm và ký hiệu tiền tệ
-                let numberText = numberElement.innerText.trim();
-                let numberValue = parseInt(numberText.replace(/\./g, '').replace(/₫/, '').trim(), 10);
+    numberParams.forEach((param, index) => {
+        let numberText = getUrlParameter(param);
+        let textElement = document.getElementById(textIds[index]);
 
-                if (!isNaN(numberValue)) {
-                    // Chuyển đổi số thành chữ
-                    let textValue = numberToWords(numberValue);
-                    // Cập nhật giá trị chữ vào thẻ HTML
-                    textElement.innerText = textValue;
-                }
+        if (numberText && textElement) {
+            // Loại bỏ dấu chấm và ký hiệu tiền tệ
+            let numberValue = parseInt(numberText.replace(/\./g, '').replace(/₫/, '').trim(), 10);
+
+            if (!isNaN(numberValue)) {
+                // Chuyển đổi số thành chữ
+                let textValue = numberToWords(numberValue);
+                // Cập nhật giá trị chữ vào thẻ HTML
+                textElement.innerText = textValue;
             }
-        });
-    }
+        }
+    });
+}
 
-    // Gọi hàm để cập nhật giá trị khi trang tải
-    // window.onload = updateNumbersToText;
+// Gọi hàm để cập nhật giá trị khi trang được tải
+updateNumbersToText();
         // truyền id vào đây
         var parameters = ['sct','nct','ten','sdt','lop','khoahoc','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
         parameters.forEach(function (param) {
