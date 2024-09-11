@@ -23,9 +23,20 @@
     * {
         font-family: "Times New Roman", Times, serif;
     }
+    .item {
+    margin-right: 70px; /* Khoảng cách giữa các thẻ span */
+    }
+    /* Tùy chỉnh nếu không muốn khoảng cách ở thẻ span cuối cùng */
+    .item:last-child {
+    margin-right: 0;
+    }
     body {
         background: rgb(204, 204, 204);
         font-family: "Times New Roman", Times, serif;
+    }
+    #backtotop{
+        position: fixed;
+        z-index: 1000;
     }
 
     page {
@@ -68,7 +79,7 @@
             margin-top: 40px;
             position: absolute;
             top: 50%;
-            width: 920px;
+            width: 100%;
         }
 
         .height_hr {
@@ -87,7 +98,6 @@
 
     #content {
         font-size: 13.5px;
-
     }
 
 
@@ -115,7 +125,9 @@
 
 
     #content {
-        padding: 40px 40px;
+        padding: 40px 40px; 
+        width: 100%;
+        height: max-content;
     }
 
     #select-setup-print {
@@ -195,21 +207,22 @@
 </style>
 
 <body>
-    <button onclick="print()" class="btn btn-info fixed-button" style="width: 100%"><i class="fa fa-print"></i> <span
+    <button onclick="print()" id="backtotop" class="btn btn-info fixed-button" style="width: 100%"><i class="fa fa-print"></i> <span
         class="language_print"></span></button>
     <page size="A5" id="page" layout="portrait">
         <div id="content">
-            <div style="border: none; padding: 10px; display: flex; align-items: center;font-family: 'Times New Roman', Times, serif;">
-                <div style="flex: 1;">
+            <div style="border: none; padding: 10px; display: flex; align-items: center;justify-content: space-between;">
+                <div>
                     <img src="https://www.appsheet.com:443/fsimage.png?appid=237238ed-4230-4db1-ab50-e492cea9cdba&datasource=google&filename=DocId%3D1egTRwdbY1nciPNbp0oyfwtw2nkjAaPEk&signature=2a1e24bf7c4923ebddf506465345589f92fe6343600fded5f6a451ffc64d134b&tableprovider=google&userid=925719472" alt="LEA Logo" style="width: 100px;">
                 </div>
-                <div style="flex: 3; text-align: center;font-weight: bolder;">
+                <div style="text-align: center;font-weight: bolder;margin-right: 100px;">
                     <h2 style="margin: 0; font-size: 16px;font-weight: bolder;">TRUNG TÂM NGOẠI NGỮ LIÊN ÂU MỸ</h2>
                     <p style="margin: 0; font-size: 14px;">
                         ĐT: TPK - 02743618998 - TU: 02743639995 - HN: 02746549595 <br>
                         Websites: www.lea.edu.vn - Hotline: 0274.9999.899
                     </p>
                 </div>
+                <div></div>
             </div>
             <h4 style="text-align: center;font-family: 'Times New Roman', Times, serif;font-weight: bolder;">PHIẾU THU</h4>
         
@@ -220,44 +233,45 @@
                 </div>
             </div>
             <p><span id="nct">27/09/2024</span></p>
-            <div style="justify-content: space-between;display: flex;padding-right: 200px;">
-                <p><span style="font-weight: bolder;">Tên học viên:&ensp;</span> <span id="ten"></span></p>
-                <p><strong>Số điện thoại:&ensp;</strong><span id="sdt"></span></p>
+            <div style="justify-content: start;display: flex;">
+                <p class="item"><span style="font-weight: bolder;">Tên học viên:&ensp;</span> <span id="ten"></span></p>
+                <p class="item"><strong>Số điện thoại:&ensp;</strong><span id="sdt"></span></p>
             </div>
         
             <div>
                 <p><strong>Lớp:&ensp;</strong><span id="lop"></span></p>
-                <div style="justify-content: space-between;display: flex;padding-right: 200px;">                
-                    <p><strong>Ngày khai giảng:&ensp;</strong> <span id="nkg"></span></p>
-                    <p><strong>Ngày kết thúc:&ensp;</strong> <span id="nkt"></span></p>
+                <div style="justify-content: start;display: flex;">                
+                    <p class="item"><strong>Ngày kết thúc:&ensp;</strong> <span id="nkt"></span></p>
+                    <p class="item"><strong>Ngày khai giảng:&ensp;</strong> <span id="nkg"></span></p>
                 </div>
-                <p><strong>Ngày vào học:&ensp;</strong><span id="nvh"></span></p>
+                <p><strong>Ngày vào học:&ensp;</strong> <span id="nvh"></span></p>
             </div>
         
             <div>
-                <p><strong>Ghi chú:&ensp;</strong><span id="note"></span></p>
+                <p><strong>Ghi chú:&ensp;</strong> <span id="note"></span></p>
             </div>
         
             <div>
-                <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                    <p><strong>Khóa học:&ensp;</strong> <span id="lop"></span></p>
-                    <p><strong>Học phí:&ensp;</strong> <span id="hphi"></span></p>
+                <div style="justify-content: start;display: flex;">
+                    <p class="item"><strong>Khóa học:&ensp;</strong> <span id="khoahoc"></span></p>
+                    <p class="item"><strong>Học phí:&ensp;</strong> <span id="hphi"></span></p>
                 </div>
-                <div style="justify-content: space-between;display: flex;padding-right: 10px;">
+                <!-- inline element -->
+                <div style="display: inline;">
                     <p><strong>Giáo trình:&ensp;</strong><span id="tengt"></span></p>
-                    <p><strong>Tiền giáo trình:&ensp;</strong><span style="margin-right: 10;" id="tiengt"></span></p>
+                    <p><strong>Tiền giáo trình:&ensp;</strong><span id="tiengt"></span></p>
                 </div>
             </div>
-        
-            <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                <p><strong>Ưu đãi: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span></p>
-                <p><strong>Ưu đãi khác: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span></p>
+        <!-- inline element -->
+            <div style="display: inline;">
+                <p><strong>Ưu đãi: </strong>&ensp;<span id="pcdc"></span>&emsp;&emsp;&emsp;&ensp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span></p>
+                <p><strong>Ưu đãi khác: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi khác: </strong>&ensp;<span id="prdc"></span></p>
             </div>
         
             <div>
-                <div style="justify-content: space-between;display: flex;padding-right: 10px;">
-                    <p><strong>Thành tiền:&ensp;</strong><span id="ttien"></span></p>
-                    <p><strong>Số tiền thanh toán:&ensp;</strong><span id="ttt"></span></p>
+                <div style="justify-content: start;display: flex;">
+                    <p class="item"><strong>Thành tiền:&ensp;</strong><span id="ttien"></span></p>
+                    <p class="item"><strong>Số tiền thanh toán:&ensp;</strong><span id="ttt"></span></p>
                 </div>
                 <p><strong>Còn lại:&ensp;</strong><span id="conlai"></span></p>
             </div>
@@ -267,15 +281,15 @@
                 <p><strong>Còn lại bằng chữ:&ensp;</strong><span id="conlaitext"></span></p>
             </div>
         
-            <div style="margin-top: 30px;">
-                <div style="text-align: center; display: flex; justify-content: space-between;padding: 10px 50px 20px 40px ;">
+            <div style="margin-top: 30px; padding: 0px 40px;">
+                <div style="text-align: center; display: flex; justify-content: space-between;">
                     <div><strong>Người lập phiếu </strong><br> (Ký ghi rõ họ tên)</div>
                     <div><strong>Người nộp tiền</strong> <br> (Ký ghi rõ họ tên)</div>
                     <div><strong>Thủ trưởng đơn vị</strong> <br> (Ký ghi rõ họ tên)</div>
                 </div>
             </div>
         
-            <div style="margin-top: 200px; font-size: 12px;">
+            <div style="margin-top: 252px; font-size: 12px;">
                 <p><strong>Lưu ý:</strong> Trung tâm sẽ không hoàn lại học phí trong bất kỳ trường hợp nào <br>
                 Đối với các trường hợp đặc biệt, học phí sẽ được bảo lưu trong thời gian 1 khóa</p>
             </div>
@@ -308,14 +322,20 @@
         }
 
         // truyền id vào đây
-        var parameters = ['sct','nct','ten','sdt','lop','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
+        var parameters = ['sct','nct','ten','sdt','lop','khoahoc','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
         parameters.forEach(function (param) {
             var value = getUrlParameter(param);
             setTextContentById(param, value);
         });
-      
-      
-      
+        document.addEventListener('keydown', function(event) {
+             if (event.code === 'Space') {
+                 event.preventDefault(); 
+                 print(); 
+             }
+         });
+         $('#printButton').on('click', function() {
+             print(); 
+         });
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
