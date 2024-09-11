@@ -36,7 +36,7 @@
         box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
     }
 
-    page[size="A4"][layout="portrait"] {
+    page[size="A5"][layout="portrait"] {
         width:21cm;
 
     }
@@ -147,6 +147,7 @@
         margin-top: 20px;
         margin-bottom: 20px;
         position: relative;
+        border: 1px solid black; 
     }
 
 
@@ -196,7 +197,7 @@
 <body>
     <button onclick="print()" class="btn btn-info fixed-button" style="width: 100%"><i class="fa fa-print"></i> <span
         class="language_print"></span></button>
-    <page size="A4" id="page" layout="portrait">
+    <page size="A5" id="page" layout="portrait">
         <div id="content">
             <div style="border: none; padding: 10px; display: flex; align-items: center;font-family: 'Times New Roman', Times, serif;">
                 <div style="flex: 1;">
