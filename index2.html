@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Preview Hóa Đơn</title>
+<style>
+body {
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+#hoa-don {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  width: 105mm;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Định dạng chung */
+body, table {
+  font-family: sans-serif;
+  font-size: 10pt;
+}
+
+/* Tiêu đề hóa đơn */
+#header {
+  text-align: center; /* Căn giữa nội dung trong div */
+  margin-top: 0px; 
+  margin-bottom: 15px;/* Tạo khoảng cách với phần tử bên dưới */
+}
+
+#ten-quan {
+  font-size: 1.5em; /* Cỡ chữ lớn hơn */
+  font-weight: bold; /* In đậm */
+  margin-top: 0px; /* Khoảng cách phía trên */
+  margin-bottom: 0; /* Loại bỏ khoảng cách mặc định phía dưới */
+}
+
+#dia-chi, #so-dien-thoai {
+  font-size: 0.8em; /* Cỡ chữ bé hơn */
+  margin: 0; /* Loại bỏ khoảng cách mặc định */
+  font-weight: lighter;
+}
+
+/* Bảng hóa đơn */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  /* font-size: 0.8em; */
+}
+
+th, td {
+  padding: 5px;
+  text-align: left;
+  border: 1px solid #ddd; /* Thêm đường viền cho tất cả các ô */
+}
+
+/* Căn chỉnh nội dung trong bảng */
+.label {
+  font-weight: bold;
+  width: 50px;
+}
+
+.right {
+  text-align: left;
+}
+
+/* Tổng tiền */
+.total {
+  text-align: right;
+  font-weight: bold;
+  padding-top: 10px; /* Thêm khoảng cách phía trên */
+}
+
+
+/* In ấn */
+@media print {
+  body {
+    background-color: white;
+  }
+
+  #hoa-don {
+    box-shadow: none;
+    margin-left: 2.5mm;
+    margin-right: 2.5mm;
+  }
+
+  #in-button {
+    display: none;
+  }
+  tr    { page-break-inside:avoid; page-break-after:avoid }
+}
+
+#in-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="hoa-don">
+    <div id="header">
+        <p id="ten-quan">Quán Làng Quê</p>
+        <p id="dia-chi">DC: Xóm Tiền Phong - Nghi Diên</p>
+        <p id="so-dien-thoai">Hotline: 0976 636 034 - 0342 461 033</p>
+      </div>
+  <table>
+    <tr>
+      <td class="label">H.Đơn:</td>
+      <td id="bill-id"></td>
+      <td class="label right">G.vào:</td>
+      <td id="check-in"></td>
+    </tr>
+    <tr>
+      <td class="label">Bàn:</td>
+      <td id="ban-id"></td>
+      <td class="label right">G.ra:</td>
+      <td id="check-out"></td>
+    </tr>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tên món</th>
+        <th>SL</th>
+        <th>Đ.giá</th>
+        <th>T.tiền</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+    </tbody>
+  </table>
+
+  <div class="total">
+    <span>Thành tiền:</span> <span id="subtotal"></span>
+  </div>
+  <div class="total">
+    <span>Giảm giá:</span> <span id="discount"></span>
+  </div>
+  <div class="total">
+    <span>Tổng cộng:</span> <span id="total"></span>
+  </div>
+</div>
+
+<button id="in-button" onclick="window.print()">In Hóa Đơn</button>
+
+<script>
+  // Dữ liệu mẫu (bạn cần thay thế bằng dữ liệu thực tế)
+  const bill = {
+    id: "00000001",
+    ban: "A1",
+    checkIn: "05/02/2025 21:13:53",
+    checkOut: "05/02/2025 21:13:53",
+    items: [
+      { name: "Bún chả nướng thịt chó chết", quantity: 2, price: 30000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+      { name: "Bún chả", quantity: 2, price: 30000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+      { name: "Bún chả", quantity: 2, price: 30000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+      { name: "Bún chả", quantity: 2, price: 30000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+      { name: "Bún chả", quantity: 2, price: 30000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+      { name: "Bún chả", quantity: 2, price: 30000 },
+      { name: "Nem rán", quantity: 1, price: 50000 },
+    ],
+    discount: 0,
+  };
+
+  // Hàm định dạng tiền tệ
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  };
+
+  // Hiển thị thông tin hóa đơn
+  document.getElementById("bill-id").textContent = bill.id;
+  document.getElementById("ban-id").textContent = bill.ban;
+  document.getElementById("check-in").textContent = bill.checkIn;
+  document.getElementById("check-out").textContent = bill.checkOut;
+
+  // Hiển thị chi tiết món ăn
+  const tableBody = document.getElementById("table-body");
+  let subtotal = 0;
+  bill.items.forEach(item => {
+    const row = tableBody.insertRow();
+    const nameCell = row.insertCell();
+    const quantityCell = row.insertCell();
+    const priceCell = row.insertCell();
+    const totalCell = row.insertCell();
+
+    nameCell.textContent = item.name;
+    quantityCell.textContent = item.quantity;
+    priceCell.textContent = formatCurrency(item.price);
+    const total = item.quantity * item.price;
+    totalCell.textContent = formatCurrency(total);
+    subtotal += total;
+  });
+
+  // Tính toán và hiển thị tổng tiền
+  document.getElementById("subtotal").textContent = formatCurrency(subtotal);
+  const total = subtotal * (1 - bill.discount / 100);
+  document.getElementById("total").textContent = formatCurrency(total);
+  document.getElementById("discount").textContent = bill.discount + "%";
+</script>
+
+</body>
+</html>
