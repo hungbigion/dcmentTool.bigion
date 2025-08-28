@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHTMLX Gantt Chart - Timeline Nâng Cao</title>
+
+    <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+    <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .main-title {
+            text-align: center;
+            padding: 15px 10px;
+            margin: 0;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            color: #333;
+            flex-shrink: 0; 
+        }
+        #gantt_container {
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        /* --- CSS cho màu sắc trạng thái (giữ nguyên) --- */
+        .gantt_task_line.completed { background-color: #28a745; border-color: #1c7430; }
+        .gantt_task_line.in-progress { background-color: #fd7e14; border-color: #c76411; }
+        .gantt_task_line.on-hold { background-color: #dc3545; border-color: #a71d2a; }
+        .gantt_task_line.reviewing { background-color: #6f42c1; border-color: #533291; }
+        .gantt_task_line.not-started { background-color: #adb5bd; border-color: #838d95; }
+        .gantt_task_progress { background-color: rgba(0, 0, 0, 0.25); }
+        .gantt_tree_content .completed { color: #28a745; }
+        .gantt_tree_content .in-progress { color: #fd7e14; }
+        .gantt_tree_content .on-hold { color: #dc3545; font-weight: bold; }
+        .gantt_tree_content .reviewing { color: #6f42c1; }
+        .gantt_tree_content .not-started { color: #6c757d; }
+        
+        /* --- CSS MỚI CHO TIMELINE VÀ MARKERS --- */
+        .gantt_task_cell.weekend { background-color: #d3ffd390; }
+        .gantt_task_cell.holiday { background-color: #d3ffd390; }
+        .today_marker { background-color: #0066ff; opacity: 0.4; z-index: 1; }
+        
+        /* 🔥 FIX: Sửa lại CSS để marker nổi bật hơn */
+        .project_marker {
+            background-color: #898940; /* Vàng nhạt nhưng đậm hơn */
+            z-index: 1;
+        }
+
+        .gantt_row.gantt_selected { background-color: #e3f2fd !important; }
+        .gantt_tooltip { line-height: 1.6; padding: 10px; }
+        .tooltip_resource_row { display: flex; align-items: center; margin-top: 5px; }
+        .tooltip_avatar { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; }
+    </style>
+</head>
+<body>
+    <h1 class="main-title">Kế Hoạch Dự Án</h1>
+    <div id="gantt_container"></div>
+
+    <script>
+        const holidays = { "2025-09-01": true, "2025-09-02": true };
+        const dateFormatter = gantt.date.date_to_str("%Y-%m-%d");
+        const resourcesData = { 1: { name: 'An (Manager)', avatar: 'https://placehold.co/40x40/9C27B0/FFFFFF?text=A' }, 2: { name: 'Bình (Tester)', avatar: 'https://placehold.co/40x40/009688/FFFFFF?text=B' }, 3: { name: 'Chi (Designer)', avatar: 'https://placehold.co/40x40/FF5722/FFFFFF?text=C' }, 4: { name: 'Dũng (Frontend)', avatar: 'https://placehold.co/40x40/2196F3/FFFFFF?text=D' }, 5: { name: 'Em (Backend)', avatar: 'https://placehold.co/40x40/4CAF50/FFFFFF?text=E' } };
+        const tasks = {
+            data: [
+                { id: 1, text: 'Giai đoạn 1: Khởi động & Kế hoạch', type: gantt.config.types.project, open: true, progress: 1, css: 'completed', status: 'Hoàn thành' },
+                { id: 2, text: 'Họp khởi động dự án', start_date: '03-09-2025', duration: 2, progress: 1, parent: 1, css: 'completed', status: 'Hoàn thành', resources: [1] },
+                { id: 3, text: 'Phân tích yêu cầu', start_date: '05-09-2025', duration: 4, progress: 1, parent: 1, css: 'completed', status: 'Hoàn thành', resources: [1, 2] },
+                { id: 4, text: 'Lập kế hoạch chi tiết', start_date: '11-09-2025', duration: 5, progress: 1, parent: 1, css: 'completed', status: 'Hoàn thành', resources: [1] },
+                { id: 5, text: 'Giai đoạn 2: Thiết kế UI/UX', type: gantt.config.types.project, open: true, progress: 0.7, css: 'in-progress', status: 'Đang thực hiện' },
+                { id: 6, text: 'Nghiên cứu và xây dựng wireframe', start_date: '18-09-2025', duration: 7, progress: 1, parent: 5, css: 'completed', status: 'Hoàn thành', resources: [3] },
+                { id: 7, text: 'Thiết kế giao diện (Mockup UI)', start_date: '29-09-2025', duration: 8, progress: 0.5, parent: 5, css: 'on-hold', status: 'Tạm dừng', resources: [3] },
+                { id: 8, text: 'Tạo prototype và trình bày', start_date: '09-10-2025', duration: 3, progress: 0.25, parent: 5, css: 'reviewing', status: 'Đang duyệt', resources: [1, 3] },
+                { id: 9, text: 'Giai đoạn 3: Phát triển (Development)', type: gantt.config.types.project, open: true, progress: 0.1, css: 'in-progress', status: 'Đang thực hiện' },
+                { id: 10, text: 'Phát triển Frontend', start_date: '14-10-2025', duration: 10, progress: 0.2, parent: 9, css: 'reviewing', status: 'Đang duyệt', resources: [4] },
+                { id: 11, text: 'Phát triển Backend và Database', start_date: '14-10-2025', duration: 12, progress: 0.15, parent: 9, css: 'in-progress', status: 'Đang thực hiện', resources: [5] },
+                { id: 12, text: 'Tích hợp Frontend và Backend', start_date: '30-10-2025', duration: 5, progress: 0, parent: 9, css: 'on-hold', status: 'Tạm dừng', resources: [4, 5] },
+                { id: 13, text: 'Giai đoạn 4: Kiểm thử (QA) và Triển khai', type: gantt.config.types.project, open: true, progress: 0, css: 'not-started', status: 'Chưa bắt đầu' },
+                { id: 14, text: 'Kiểm thử nội bộ và sửa lỗi', start_date: '06-11-2025', duration: 5, progress: 0, parent: 13, css: 'not-started', status: 'Chưa bắt đầu', resources: [2] },
+                { id: 15, text: 'Triển khai lên server và bàn giao', start_date: '13-11-2025', duration: 5, progress: 0, parent: 13, css: 'not-started', status: 'Chưa bắt đầu', resources: [1, 5] }
+            ],
+            links: [ { id: 1, source: 2, target: 3, type: '0' }, { id: 2, source: 3, target: 4, type: '0' }, { id: 3, source: 4, target: 6, type: '0' }, { id: 4, source: 6, target: 7, type: '0' }, { id: 5, source: 7, target: 8, type: '0' }, { id: 6, source: 8, target: 10, type: '0' }, { id: 7, source: 8, target: 11, type: '0' }, { id: 8, source: 10, target: 12, type: '0' }, { id: 9, source: 11, target: 12, type: '0' }, { id: 10, source: 12, target: 14, type: '0' }, { id: 11, source: 14, target: 15, type: '0' } ]
+        };
+
+        // --- CẤU HÌNH GANTT ---
+        gantt.config.columns = [ { name: "text", label: "Tên Công Việc", tree: true, width: 350, template: (task) => `<span class="${task.css || ''}">${task.text}</span>` }, { name: "assignee", label: "Người Thực Hiện", width: 180, align: "left", template: (task) => { if (!task.resources || !task.resources.length) return "N/A"; let html = '<div style="display:flex; align-items:center; gap: 4px;">'; task.resources.forEach(resId => { const resource = resourcesData[resId]; if (resource) { html += `<img src="${resource.avatar}" title="${resource.name}" style="width:24px; height:24px; border-radius:50%;">`; } }); html += '</div>'; return html; } }, { name: "start_date", label: "Bắt Đầu", align: "center", width: 90 }, { name: "duration", label: "Thời Lượng", align: "center", width: 90 } ];
+        gantt.config.drag_move = false;
+        gantt.config.drag_resize = false;
+        gantt.config.drag_progress = false;
+        gantt.config.drag_links = false;
+        gantt.config.scales = [ { unit: "month", step: 1, format: "%F %Y" }, { unit: "day", step: 1, format: "%d" } ];
+        gantt.config.scale_height = 54;
+        gantt.config.work_time = true;
+        gantt.config.skip_off_time = true;
+        gantt.config.date_format = "%d-%m-%Y";
+
+        // --- TEMPLATES ---
+        gantt.templates.timeline_cell_class = function (task, date) { const day = date.getDay(); if (day === 0 || day === 6) { return "weekend"; } if (holidays[dateFormatter(date)]) { return "holiday"; } return ""; };
+        gantt.templates.task_class = (start, end, task) => task.css || '';
+        gantt.templates.tooltip_text = (start, end, task) => { let html = `<b>${task.text}</b><br/><b>Thời gian:</b> ${gantt.templates.tooltip_date_format(start)} - ${gantt.templates.tooltip_date_format(end)}<br/><b>Tiến độ:</b> ${Math.round(task.progress * 100)}%<br/><b>Trạng thái:</b> ${task.status || 'N/A'}<br/>`; if (task.resources && task.resources.length) { html += '<b>Thực hiện bởi:</b>'; task.resources.forEach(resId => { const resource = resourcesData[resId]; if (resource) { html += `<div class='tooltip_resource_row'><img class='tooltip_avatar' src='${resource.avatar}'><span>${resource.name}</span></div>`; } }); } return html; };
+        
+        gantt.plugins({ tooltip: true, marker: true });
+
+        // --- SỰ KIỆN (EVENTS) ---
+        gantt.attachEvent("onLinkDblClick", (id) => false);
+        gantt.attachEvent("onTaskDblClick", (id, e) => { const task = gantt.getTask(id); const taskInfo = JSON.stringify(task, null, 2); alert(taskInfo); return false; });
+
+        // --- KHỞI TẠO BIỂU ĐỒ ---
+        gantt.init("gantt_container");
+        gantt.parse(tasks);
+
+        // 🔥 FIX: Mở rộng khoảng thời gian hiển thị để bao gồm ngày hôm nay
+        const today = new Date();
+        const projectRange = gantt.getSubtaskDates();
+        let viewStartDate = projectRange.start_date;
+        if (today < viewStartDate) {
+            viewStartDate = today;
+        }
+        gantt.config.start_date = gantt.date.add(viewStartDate, -3, "day");
+        gantt.config.end_date = gantt.date.add(projectRange.end_date, 3, "day");
+        gantt.render(); // Render lại biểu đồ với khoảng thời gian mới
+
+
+        // --- MARKERS ---
+        gantt.addMarker({ start_date: new Date(), css: "today_marker", text: "Hôm nay", title: `Hôm nay: ${new Date().toLocaleDateString('vi-VN')}` });
+        if (projectRange.start_date) {
+            gantt.addMarker({ start_date: projectRange.start_date, css: "project_marker", text: "Bắt đầu dự án" });
+        }
+        if (projectRange.end_date) {
+            gantt.addMarker({ start_date: projectRange.end_date, css: "project_marker", text: "Kết thúc dự án" });
+        }
+    </script>
+</body>
+</html>
