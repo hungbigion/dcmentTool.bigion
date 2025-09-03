@@ -3,338 +3,818 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syncfusion Gantt Chart - Demo Project Agency (Nâng cao)</title>
+    <title>Campaign Tracker</title>
     
-    <!-- Nhúng CSS của Syncfusion từ CDN -->
-    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet" type="text/css"/>
+    <!-- DHTMLX Gantt Chart -->
+    <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+    <link href="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css" rel="stylesheet">
     
-    <!-- Nhúng JavaScript của Syncfusion từ CDN -->
-    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js" type="text/javascript"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    <!-- CSS tùy chỉnh cho màu sắc của các trạng thái -->
     <style>
+        /* Custom styles for Material Design 3 feel */
+        html {
+            scroll-behavior: smooth;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f2fa;
+            /* Padding top will be set by JS to avoid content being overlapped by fixed header */
         }
-        .main-title {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: bottom;
+            font-size: 1.25rem;
         }
-
-        /* Helper function to style taskbars */
-        .e-gantt .e-gantt-taskbar > .e-taskbar-main-container,
-        .e-gantt .e-gantt-taskbar > .e-taskbar-main-container > .e-gantt-child-taskbar-inner-div {
-            border-radius: 4px;
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         
- /* --- Định nghĩa màu sắc cho các trạng thái --- */
+        /* NEW Loading spinner animation */
+        .loader {
+          width: 40px;
+          height: 40px;
+          color: #6750a4;
+          background:
+            conic-gradient(from -45deg at top    20px left 50% ,#0000 ,currentColor 1deg 90deg,#0000 91deg),
+            conic-gradient(from  45deg at right  20px top  50% ,#0000 ,currentColor 1deg 90deg,#0000 91deg),
+            conic-gradient(from  135deg at bottom 20px left 50% ,#0000 ,currentColor 1deg 90deg,#0000 91deg),
+            conic-gradient(from -135deg at left   20px top  50% ,#0000 ,currentColor 1deg 90deg,#0000 91deg);
+          animation: l4 1.5s infinite cubic-bezier(0.3,1,0,1);
+        }
+        @keyframes l4 {
+          50%  {width:60px;height: 60px;transform: rotate(180deg)}
+          100% {transform: rotate(360deg)}
+        }
 
-    /* ==== child Completed - Xanh lá  ==== */
-    .e-gantt .e-taskbar-main-container.completed .e-gantt-child-taskbar-inner-div {
-        background-color: #A5D6A7 !important; /* nền xanh nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.completed .e-gantt-child-progressbar-inner-div {
-        background-color: #2E7D32 !important; /* progress xanh đậm */
-    }
-        /* ====Parent Completed - Xanh lá ==== */
-    .e-gantt .e-taskbar-main-container.completed .e-gantt-parent-taskbar-inner-div {
-        background-color: #A5D6A7 !important; /* nền xanh nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.completed .e-gantt-parent-progressbar-inner-div {
-        background-color: #2E7D32 !important; /* progress xanh đậm */
-    }
 
-    /* Màu chữ trong bảng (TaskName) */
-    .e-treegrid .e-rowcell.completed {
-        color: #2E7D32 !important;
-        font-weight: 600;
-    }
-
-    /* ==== child In Progress - Vàng ==== */
-    .e-gantt .e-taskbar-main-container.in-progress .e-gantt-child-taskbar-inner-div {
-        background-color: #FFE082 !important; /* nền vàng nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.in-progress .e-gantt-child-progressbar-inner-div {
-        background-color: #FF8F00 !important; /* progress vàng cam đậm */
-    }
-        /* ==== parent In Progress - Vàng ==== */
-    .e-gantt .e-taskbar-main-container.in-progress .e-gantt-parent-taskbar-inner-div {
-        background-color: #FFE082 !important; /* nền vàng nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.in-progress .e-gantt-parent-progressbar-inner-div {
-        background-color: #FF8F00 !important; /* progress vàng cam đậm */
-    }
-    .e-treegrid .e-rowcell.in-progress {
-        color: #FF8F00 !important;
-        font-weight: 600;
-    }
-
-    /* ==== child On Hold - Đỏ ==== */
-    .e-gantt .e-taskbar-main-container.on-hold .e-gantt-child-taskbar-inner-div {
-        background-color: #EF9A9A !important; /* nền đỏ nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.on-hold .e-gantt-child-progressbar-inner-div {
-        background-color: #C62828 !important; /* progress đỏ đậm */
-    }
-        /* ==== parent On Hold - Đỏ ==== */
-    .e-gantt .e-taskbar-main-container.on-hold .e-gantt-parent-taskbar-inner-div {
-        background-color: #EF9A9A !important; /* nền đỏ nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.on-hold .e-gantt-parent-progressbar-inner-div {
-        background-color: #C62828 !important; /* progress đỏ đậm */
-    }
-    .e-treegrid .e-rowcell.on-hold {
-        color: #C62828 !important;
-        font-weight: 600;
-    }
-
-    /* ==== child Reviewing - Tím ==== */
-    .e-gantt .e-taskbar-main-container.reviewing .e-gantt-child-taskbar-inner-div {
-        background-color: #CE93D8 !important; /* nền tím nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.reviewing .e-gantt-child-progressbar-inner-div {
-        background-color: #6A1B9A !important; /* progress tím đậm */
-    }
-        /* ==== parent Reviewing - Tím ==== */
-    .e-gantt .e-taskbar-main-container.reviewing .e-gantt-parent-taskbar-inner-div {
-        background-color: #CE93D8 !important; /* nền tím nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.reviewing .e-gantt-parent-progressbar-inner-div {
-        background-color: #6A1B9A !important; /* progress tím đậm */
-    }
-    .e-treegrid .e-rowcell.reviewing {
-        color: #6A1B9A !important;
-        font-weight: 600;
-    }
-
-    /* ==== child Not Started - Xám ==== */
-    .e-gantt .e-taskbar-main-container.not-started .e-gantt-child-taskbar-inner-div {
-        background-color: #E0E0E0 !important; /* nền xám nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.not-started .e-gantt-child-progressbar-inner-div {
-        background-color: #616161 !important; /* progress xám đậm */
-    }
-        /* ==== parent Not Started - Xám ==== */
-    .e-gantt .e-taskbar-main-container.not-started .e-gantt-parent-taskbar-inner-div {
-        background-color: #E0E0E0 !important; /* nền xám nhạt */
-    }
-    .e-gantt .e-taskbar-main-container.not-started .e-gantt-parent-progressbar-inner-div {
-        background-color: #616161 !important; /* progress xám đậm */
-    }
-    .e-treegrid .e-rowcell.not-started {
-        color: #616161 !important;
-        font-weight: 600;
-    }
-
-    /* ==== Task label trên thanh Gantt ==== */
-    .e-gantt .e-task-label {
-        color: #fff !important;
-        font-size: 12px;
-        text-shadow: 0 0 3px rgba(0,0,0,0.8);
-    }
-        
-        /* --- Style cho text hiển thị trên thanh task --- */
-        .e-gantt .e-gantt-taskbar .e-task-label {
+        /* Filter button styles */
+        .filter-btn {
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+        }
+        .filter-btn.active {
+            background-color: #6750a4;
             color: white;
-            font-size: 12px;
-            /* Thêm bóng mờ để chữ dễ đọc trên mọi màu nền */
-            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+        }
+        /* Fixed header styles for maximum smoothness */
+        #header-controls {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        #header-controls.hidden {
+            transform: translateY(-100%);
+        }
+        /* Back to top button - SMOOTHER TRANSITION */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        #back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        /* Horizontal scroll for filters */
+        .filters-wrapper {
+            position: relative;
+        }
+        .filters-container {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: opacity 0.2s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .scroll-arrow.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .scroll-arrow:hover {
+            background-color: white;
+        }
+        .scroll-arrow.left {
+            left: -16px;
+        }
+        .scroll-arrow.right {
+            right: -16px;
         }
         
-        /* --- Style cho tooltip --- */
-        .custom-tooltip {
-            padding: 8px;
-            font-size: 13px;
-        }
-        .custom-tooltip strong {
-            margin-right: 5px;
-        }
+        /* GANTT CHART STYLES */
+        .gantt_task_line.Pending { background-color: #facc15; border-color: #ca8a04; } /* yellow-400 */
+        .gantt_task_line.OnGoing { background-color: #3b82f6; border-color: #2563eb; } /* blue-500 */
+        .gantt_task_line.Done { background-color: #22c55e; border-color: #16a34a; }    /* green-500 */
+        .gantt_task_line.Stop { background-color: #ef4444; border-color: #dc2626; }    /* red-500 */
+        
+        .gantt_tree_content .gantt_task_name.Pending { color: #ca8a04; }
+        .gantt_tree_content .gantt_task_name.OnGoing { color: #2563eb; }
+        .gantt_tree_content .gantt_task_name.Done { color: #16a34a; }
+        .gantt_tree_content .gantt_task_name.Stop { color: #dc2626; font-weight: bold; }
+        
+        .gantt_task_progress { background-color: rgba(0, 0, 0, 0.25); }
+        .today_marker { background-color: #0066ff; opacity: 0.4; z-index: 1; }
+        .project_marker { background-color: #898940; z-index: 1; }
+        .gantt_tooltip { line-height: 1.6; padding: 10px; }
+        .tooltip_resource_row { display: flex; align-items: center; margin-top: 5px; }
+        .tooltip_avatar { width: 24px; height: 24px; border-radius: 50%; margin-right: 8px; }
+
+        /* Highlight for weekends and holidays */
+        .gantt_task_cell.weekend { background-color: #f0f0f0 !important; }
 
     </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-    <h1 class="main-title">Kế Hoạch Dự Án</h1>
-    
-    <!-- Element để render Gantt chart -->
-    <div id="GanttChart" style="height: 550px;"></div>
+    <!-- Main Page (Campaign List) -->
+    <div id="main-page">
+        <!-- Header & Filters Section -->
+        <div id="header-controls" class="bg-white/80 backdrop-blur-sm shadow-sm">
+            <div class="container mx-auto px-4 md:px-6 lg:px-8 py-3 space-y-3">
+                 <div class="flex justify-between items-center gap-4">
+                    <h1 class="text-xl md:text-2xl font-bold text-[#1d192b] whitespace-nowrap">IDC</h1>
+                    <div class="flex items-center border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-[#6750a4] transition bg-white w-full max-w-lg">
+                        <select id="search-column-select" class="bg-gray-50 border-r border-gray-300 rounded-l-lg p-2 text-sm text-gray-700 focus:outline-none">
+                            <option value="campaign">Tên Chiến dịch</option>
+                            <option value="jobNumber">Job Number</option>
+                            <option value="description">Mô tả</option>
+                            <option value="owner">Owner</option>
+                        </select>
+                        <input type="text" id="search-input" placeholder="Tìm kiếm..." class="w-full p-2 bg-transparent focus:outline-none">
+                    </div>
+                </div>
+                <!-- Quick Filters with Horizontal Scroll -->
+                <div id="quick-filters-wrapper" class="filters-wrapper">
+                    <div id="filters-container" class="filters-container">
+                         <div id="quick-filters-inner" class="flex items-center gap-2">
+                            <!-- Filter buttons will be inserted here -->
+                         </div>
+                    </div>
+                    <div id="scroll-left" class="scroll-arrow left">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </div>
+                    <div id="scroll-right" class="scroll-arrow right">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container mx-auto p-4 md:px-6 lg:px-8">
+            <!-- Campaign Grid -->
+            <div id="campaign-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Campaign items will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Page -->
+    <div id="detail-page" class="hidden">
+        <div class="container mx-auto p-4 md:p-6 lg:p-8 flex flex-col h-screen">
+            <div class="flex justify-between items-center mb-4 flex-shrink-0">
+                <div>
+                    <h2 id="detail-campaign-title" class="text-3xl font-bold text-[#1d192b] mb-1"></h2>
+                    <p id="detail-campaign-job" class="text-gray-500"></p>
+                </div>
+                <button id="back-to-main" class="flex items-center gap-2 text-sm font-medium text-[#6750a4] hover:underline">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Quay lại danh sách
+                </button>
+            </div>
+            
+            <div id="gantt-container" class="w-full flex-grow relative">
+                 <!-- Gantt chart will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading & Message Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-f7f2fa/80 backdrop-blur-sm z-[100] flex flex-col items-center justify-center">
+        <div class="loader"></div>
+        <p id="message" class="text-gray-700 mt-6 font-medium">Đang tải dữ liệu chiến dịch...</p>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="bg-[#6750a4] text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center">
+        <span class="material-symbols-outlined">arrow_upward</span>
+    </button>
+
 
     <script>
-        // Dữ liệu mẫu cho dự án
-        const dataSource = [
-            { TaskID: 1, TaskName: 'Giai đoạn 1: Khởi động & Kế hoạch', StartDate: new Date('09/01/2025'), EndDate: new Date('09/15/2025'), Progress: 100, Status: 'Hoàn thành', CssClass: 'completed' },
-            { TaskID: 2, TaskName: 'Họp khởi động dự án', StartDate: new Date('09/01/2025'), Duration: 2, Progress: 100, parentID: 1, Status: 'Hoàn thành', CssClass: 'completed', resources: [1] },
-            { TaskID: 3, TaskName: 'Phân tích yêu cầu', StartDate: new Date('09/03/2025'), Duration: 4, Progress: 100, parentID: 1, Predecessor: '2FS', Status: 'Hoàn thành', CssClass: 'completed', resources: [1, 2] },
-            { TaskID: 4, TaskName: 'Lập kế hoạch chi tiết', StartDate: new Date('09/09/2025'), Duration: 5, Progress: 100, parentID: 1, Predecessor: '3FS', Status: 'Hoàn thành', CssClass: 'completed', resources: [1] },
-            { TaskID: 5, TaskName: 'Giai đoạn 2: Thiết kế UI/UX', StartDate: new Date('09/16/2025'), EndDate: new Date('10/03/2025'), Predecessor: '4FS', Progress: 70, Status: 'Đang thực hiện', CssClass: 'in-progress' },
-            { TaskID: 6, TaskName: 'Nghiên cứu và xây dựng wireframe', StartDate: new Date('09/16/2025'), Duration: 7, Progress: 100, parentID: 5, Status: 'Hoàn thành', CssClass: 'completed', resources: [3] },
-            // [CẬP NHẬT DỮ LIỆU] Thay đổi trạng thái để có nhiều màu sắc hơn
-            { TaskID: 7, TaskName: 'Thiết kế giao diện (Mockup UI)', StartDate: new Date('09/25/2025'), Duration: 8, Progress: 50, parentID: 5, Predecessor: '6FS', Status: 'Tạm dừng', CssClass: 'on-hold', resources: [3] }, // Đổi sang màu đỏ
-            { TaskID: 8, TaskName: 'Tạo prototype và trình bày', StartDate: new Date('10/06/2025'), Duration: 3, Progress: 25, parentID: 5, Predecessor: '7FS', Status: 'Đang duyệt', CssClass: 'reviewing', resources: [1, 3] }, // Giữ màu tím
-            { TaskID: 9, TaskName: 'Giai đoạn 3: Phát triển (Development)', StartDate: new Date('10/06/2025'), EndDate: new Date('10/24/2025'), Predecessor: '8FS', Progress: 10, Status: 'Đang thực hiện', CssClass: 'in-progress' }, // Giữ màu vàng
-            { TaskID: 10, TaskName: 'Phát triển Frontend', StartDate: new Date('10/06/2025'), Duration: 10, Progress: 20, parentID: 9, Status: 'Đang duyệt', CssClass: 'reviewing', resources: [4] }, // Đổi sang màu tím
-            { TaskID: 11, TaskName: 'Phát triển Backend và Database', StartDate: new Date('10/06/2025'), Duration: 12, Progress: 15, parentID: 9, Status: 'Đang thực hiện', CssClass: 'in-progress', resources: [5] }, // Giữ màu vàng
-            { TaskID: 12, TaskName: 'Tích hợp Frontend và Backend', StartDate: new Date('10/20/2025'), Duration: 5, Progress: 0, parentID: 9, Predecessor: '10FS,11FS', Status: 'Tạm dừng', CssClass: 'on-hold', resources: [4, 5] }, // Giữ màu đỏ
-            { TaskID: 13, TaskName: 'Giai đoạn 4: Kiểm thử (QA) và Triển khai', StartDate: new Date('10/27/2025'), EndDate: new Date('11/07/2025'), Progress: 0, Predecessor: '12FS', Status: 'Chưa bắt đầu', CssClass: 'not-started' },
-            { TaskID: 14, TaskName: 'Kiểm thử nội bộ và sửa lỗi', StartDate: new Date('10/27/2025'), Duration: 5, Progress: 0, parentID: 13, Status: 'Chưa bắt đầu', CssClass: 'not-started', resources: [2] },
-            { TaskID: 15, TaskName: 'Triển khai lên server và bàn giao', StartDate: new Date('11/03/2025'), Duration: 5, Progress: 0, parentID: 13, Predecessor: '14FS', Status: 'Chưa bắt đầu', CssClass: 'not-started', resources: [1, 5] }
-        ];
+        // --- CẤU HÌNH ---
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby2NBoGgEZzggApx5SMlLBTXI8IV2iRZU2WZI4oaZvKb5N7pTw0nOrXl2vphWdq3JPq/exec";
 
-        // Dữ liệu về người thực hiện
-        const resourcesData = [
-            { resourceId: 1, resourceName: 'An (Manager)', avatar: '1DPMvklpnalCdLViGwzXHlbAdp_RFvcaL' },
-            { resourceId: 2, resourceName: 'Bình (Tester)', avatar: '1DPMvklpnalCdLViGwzXHlbAdp_RFvcaL' },
-            { resourceId: 3, resourceName: 'Chi (Designer)', avatar: '1DPMvklpnalCdLViGwzXHlbAdp_RFvcaL' },
-            { resourceId: 4, resourceName: 'Dũng (Frontend)', avatar: '1DPMvklpnalCdLViGwzXHlbAdp_RFvcaL' },
-            { resourceId: 5, resourceName: 'Em (Backend)', avatar: '1DPMvklpnalCdLViGwzXHlbAdp_RFvcaL' }
-        ];
+        // --- GLOBAL STATE ---
+        let allCampaigns = [];
+        let activeFilters = { searchColumn: 'campaign', searchTerm: '', accountTeam: null, jobStatus: null, campaignStatus: null };
+        let lastScrollY = window.scrollY;
+        let ticking = false; // For scroll optimization
 
-
-        // Khởi tạo Gantt Chart
-        const gantt = new ej.gantt.Gantt({
-            dataSource: dataSource,
-            resources: resourcesData,
-            height: '550px',
-            allowSorting: true,
-            allowResizing: true,
-            
-            // "Ánh xạ" các trường dữ liệu
-            taskFields: {
-                id: 'TaskID',
-                name: 'TaskName',
-                startDate: 'StartDate',
-                endDate: 'EndDate',
-                duration: 'Duration',
-                progress: 'Progress',
-                dependency: 'Predecessor',
-                parentID: 'parentID',
-                resourceInfo: 'resources',
-                cssClass: 'CssClass',
-            },
-            
-            // "Ánh xạ" dữ liệu người thực hiện
-            resourceFields: {
-                id: 'resourceId',
-                name: 'resourceName',
-            },
-
-            // Cấu hình các cột hiển thị
-            columns: [
-                { field: 'TaskID', headerText: 'ID', textAlign: 'Right', width: '80' },
-                { field: 'TaskName', headerText: 'Tên Công Việc', width: '300' },
-                { field: 'resources', headerText: 'Người Thực Hiện', width: '200' },
-                { field: 'Progress', headerText: 'Tiến Độ (%)', width: '120', textAlign: 'Center' },
-                { field: 'Status', headerText: 'Trạng Thái', width: '150' },
-                { field: 'StartDate', headerText: 'Ngày Bắt Đầu', format: 'dd/MM/yyyy', width: '150' },
-                { field: 'Duration', headerText: 'Thời Lượng (ngày)', textAlign: 'Center', width: '150' }
-            ],
-            // Sử dụng labelSettings để hiển thị text trên thanh task
-            labelSettings: {
-                taskLabel: '${TaskName} - ${Progress}%'
-            },
-
-            // Cấu hình tooltip khi hover
-            tooltipSettings: {
-                showTooltip: true
-            },
-            // Hiển thị avatar + thông tin trong cell Resources
-            queryCellInfo: function (args) {
-                if (args.column.field === 'resources' && args.data.ganttProperties.resources) {
-                    const container = document.createElement('div');
-                    container.style.display = 'flex';
-                    container.style.alignItems = 'center';
-                    container.style.gap = '6px';
-
-                    args.data.ganttProperties.resources.forEach(res => {
-                        const user = resourcesData.find(r => r.resourceId === res.resourceId);
-                        if (user) {
-                            const img = document.createElement('img');
-                            // ⚠️ Test trước với link ảnh ngoài (ví dụ Imgur)
-                            img.src = `https://i.imgur.com/DSf1I3F.png`;
-                            // Nếu muốn Google Drive: `https://drive.google.com/uc?id=${user.avatar}`
-                            img.alt = user.resourceName;
-                            img.style.width = '24px';
-                            img.style.height = '24px';
-                            img.style.borderRadius = '50%';
-
-                            const span = document.createElement('span');
-                            span.textContent = user.resourceName;
-                            span.style.marginLeft = '4px';
-                            span.style.fontSize = '13px';
-
-                            const item = document.createElement('div');
-                            item.style.display = 'flex';
-                            item.style.alignItems = 'center';
-                            item.appendChild(img);
-                            item.appendChild(span);
-
-                            container.appendChild(item);
-                        }
-                    });
-
-                    args.cell.innerHTML = '';
-                    args.cell.appendChild(container);
-                }
-            },
-
-            // Tooltip nâng cao
-            queryTooltipInfo: function (args) {
-                if (args.data) {
-                    const task = args.data;
-
-                    let resourceHTML = '<i>Chưa gán</i>';
-                    if (task.ganttProperties.resources && task.ganttProperties.resources.length) {
-                        resourceHTML = task.ganttProperties.resources.map(res => {
-                            const user = resourcesData.find(r => r.resourceId === res.resourceId);
-                            if (!user) return '';
-                            return `
-                                <div style="display:flex;align-items:center;margin-bottom:4px;">
-                                    <img src="https://i.imgur.com/DSf1I3F.png" 
-                                        style="width:24px;height:24px;border-radius:50%;margin-right:6px;">
-                                    <span>${user.resourceName}</span>
-                                </div>`;
-                        }).join('');
-                    }
-
-                    args.content = `
-                        <div class='custom-tooltip'>
-                            <div><strong>Công việc:</strong> ${task.TaskName}</div>
-                            <div><strong>Trạng thái:</strong> ${task.Status}</div>
-                            <div><strong>Tiến độ:</strong> ${task.Progress}%</div>
-                            <div><strong>Thời gian:</strong> 
-                                ${task.StartDate?.toLocaleDateString()} → ${task.EndDate?.toLocaleDateString()}
-                            </div>
-                            <div><strong>Người thực hiện:</strong><br>${resourceHTML}</div>
-                        </div>
-                    `;
-                }
-            },
-                // 🔥 Thêm sự kiện rowDataBound để đổi màu chữ trong bảng
-            rowDataBound: function (args) {
-                if (args.data.CssClass) {
-                    // lấy cell của cột TaskName
-                    const cell = args.row.querySelector('[aria-label*="Task Name"], [aria-label*="Tên Công Việc"]');
-                    if (cell) {
-                        cell.classList.add(args.data.CssClass);
-                    }
-                }
-            },
-            // Đường kẻ phân cách giữa bảng và biểu đồ
-            splitterSettings: {
-                columnIndex: 3
-            },
-
-            // Thiết lập ngày bắt đầu và kết thúc của toàn dự án để hiển thị
-            projectStartDate: new Date('08/28/2025'),
-            projectEndDate: new Date('11/15/2025')
-        });
-
-        // Render Gantt chart vào thẻ div#GanttChart
-        gantt.appendTo('#GanttChart');
+        // --- DOM ELEMENTS ---
+        const mainPage = document.getElementById('main-page');
+        const detailPage = document.getElementById('detail-page');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loader = loadingOverlay.querySelector('.loader');
+        const message = loadingOverlay.querySelector('p');
+        const campaignGrid = document.getElementById('campaign-grid');
+        const searchInput = document.getElementById('search-input');
+        const searchColumnSelect = document.getElementById('search-column-select');
+        const quickFiltersInner = document.getElementById('quick-filters-inner');
+        const filtersContainer = document.getElementById('filters-container');
+        const scrollLeftBtn = document.getElementById('scroll-left');
+        const scrollRightBtn = document.getElementById('scroll-right');
+        const headerControls = document.getElementById('header-controls');
+        const backToTopButton = document.getElementById('back-to-top');
+        const backToMainBtn = document.getElementById('back-to-main');
+        const detailCampaignTitle = document.getElementById('detail-campaign-title');
+        const detailCampaignJob = document.getElementById('detail-campaign-job');
+        const ganttContainer = document.getElementById('gantt-container');
         
-    </script>
+        // --- UTILITY FUNCTIONS ---
+        
+        function fixObjectKeys(obj) {
+            const newObj = {};
+            for (const key in obj) {
+                if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                    let newKey = key.replace(/[^a-zA-Z0-9]+(.)?/g, (match, chr) => chr ? chr.toUpperCase() : '').replace(/^./, (str) => str.toLowerCase());
+                    newObj[newKey] = obj[key];
+                }
+            }
+            return newObj;
+        }
 
+        function adjustBodyPadding() {
+            const headerHeight = headerControls.offsetHeight;
+            document.body.style.paddingTop = `${headerHeight}px`;
+        }
+        
+        function parseDate(dateString) {
+            if (!dateString) return null;
+            let date = new Date(dateString);
+            if (!isNaN(date.getTime()) && (dateString.includes('T') || dateString.includes('-'))) {
+                return date;
+            }
+            const parts = dateString.split(' ')[0].split('/');
+            if (parts.length === 3) {
+                const month = parseInt(parts[0], 10) - 1;
+                const day = parseInt(parts[1], 10);
+                const year = parseInt(parts[2], 10);
+                if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+                    const parsed = new Date(year, month, day);
+                    if (parsed.getFullYear() === year && parsed.getMonth() === month && parsed.getDate() === day) {
+                        return parsed;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function formatDate(d){if(!d)return"";const a=d instanceof Date?d:parseDate(d);if(!a||isNaN(a.getTime()))return"";const b=String(a.getDate()).padStart(2,"0"),c=String(a.getMonth()+1).padStart(2,"0"),e=a.getFullYear();return`${c}/${b}/${e}`}
+        function getStatusInfo(d,a){if("CLOSED"===a)return{color:"bg-gray-100 text-gray-600",icon:"lock",text:"Closed"};switch(d){case"In Progress":return{color:"bg-blue-100 text-blue-800",icon:"autorenew",text:"In Progress"};case"Completed":return{color:"bg-green-100 text-green-800",icon:"task_alt",text:"Completed"};case"On Hold":return{color:"bg-yellow-100 text-yellow-800",icon:"pause_circle",text:"On Hold"};case"Cancelled":return{color:"bg-red-100 text-red-800",icon:"cancel",text:"Cancelled"};default:return{color:"bg-purple-100 text-purple-800",icon:"help_outline",text:d}}}
+        
+        function getGanttStatusInfo(status) {
+            if (!status) return { css: 'Pending', color: '#ca8a04' }; // Default to Pending if empty
+            const normalizedStatus = status.replace(/\s+/g, ''); // Remove spaces
+            switch(normalizedStatus) {
+                case 'Pending': return { css: 'Pending', color: '#ca8a04' };
+                case 'OnGoing': return { css: 'OnGoing', color: '#2563eb' };
+                case 'Done': return { css: 'Done', color: '#16a34a' };
+                case 'Stop': return { css: 'Stop', color: '#dc2626' };
+                default: return { css: 'Pending', color: '#ca8a04' };
+            }
+        }
+        
+        function getRandomHexColor() {
+            let color;
+            do {
+                color = Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+            } while (parseInt(color, 16) > 0xf0f0f0 || parseInt(color,16) < 0x101010); // Avoid very light/dark colors
+            return color;
+        }
+
+        function getContrastYIQ(hexcolor) {
+            const r = parseInt(hexcolor.substring(0, 2), 16);
+            const g = parseInt(hexcolor.substring(2, 4), 16);
+            const b = parseInt(hexcolor.substring(4, 6), 16);
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            return (yiq >= 128) ? '000000' : 'FFFFFF'; // black or white
+        }
+
+        function getCurrentTimeline(campaign) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            const stages = [
+                { name: 'Ideation', start: campaign.ideationStart, end: campaign.ideationEnd },
+                { name: 'Production', start: campaign.productionStart, end: campaign.productionEnd },
+                { name: 'Launch', start: campaign.launchStart, end: campaign.launchEnd },
+                { name: 'Report', start: campaign.reportStart, end: campaign.reportEnd },
+                { name: 'AWO', start: campaign.awoStart, end: campaign.awoEnd }
+            ];
+
+            let activeStage = null;
+
+            for (const stage of stages) {
+                const startDate = parseDate(stage.start);
+                const endDate = parseDate(stage.end);
+                if (startDate && endDate) {
+                    endDate.setHours(23, 59, 59, 999);
+                    if (now >= startDate && now <= endDate) {
+                        activeStage = { stage: stage.name, startDateObj: startDate, start: formatDate(startDate), end: formatDate(endDate) };
+                        break;
+                    }
+                }
+            }
+
+            if (activeStage) return activeStage;
+
+            let nextStage = null;
+            for(const stage of stages) {
+                const startDate = parseDate(stage.start);
+                if(startDate && now < startDate) {
+                    nextStage = { stage: stage.name, startDateObj: startDate, start: formatDate(startDate), end: formatDate(stage.end) };
+                    break;
+                }
+            }
+            if(nextStage) return nextStage;
+            
+            for (let i = stages.length - 1; i >= 0; i--) {
+                const stage = stages[i];
+                const startDate = parseDate(stage.start);
+                if (startDate) {
+                     return { stage: stage.name, startDateObj: startDate, start: formatDate(stage.start), end: formatDate(stage.end) };
+                }
+            }
+
+            const firstStage = stages[0];
+            return { stage: firstStage.name, startDateObj: parseDate(firstStage.start), start: formatDate(firstStage.start), end: formatDate(firstStage.end) };
+        }
+        
+        function calculateProgress(startDateStr, endDateStr) {
+            const startDate = parseDate(startDateStr);
+            const endDate = parseDate(endDateStr);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (!startDate || !endDate) return 0;
+            endDate.setHours(23, 59, 59, 999); 
+            
+            if (today < startDate) return 0;
+            if (today > endDate) return 100;
+
+            const totalDuration = endDate.getTime() - startDate.getTime();
+            const elapsedDuration = today.getTime() - startDate.getTime();
+            if (totalDuration <= 0) return 100;
+            const percentage = Math.round((elapsedDuration / totalDuration) * 100);
+            return Math.max(0, Math.min(percentage, 100));
+        }
+
+        // --- FILTERING & RENDERING (MAIN PAGE) ---
+        function populateFilters(campaigns) {
+            const filterConfigs = [
+                { title: 'Account Team', key: 'accountTeam', defaults: ["Team Kỳ", "Team Nghiêm", "Team Hằng", "None"] },
+                { title: 'Job Status', key: 'jobStatus' },
+                { title: 'Campaign Status', key: 'campaignStatus' }
+            ];
+            
+            quickFiltersInner.innerHTML = '';
+            
+            filterConfigs.forEach(config => {
+                let values = new Set(config.defaults || []);
+                campaigns.forEach(c => {
+                    if (c[config.key]) values.add(c[config.key]);
+                });
+                
+                [...values].sort().forEach(value => {
+                    const button = document.createElement('button');
+                    button.className = "filter-btn px-3 py-1 text-xs font-medium bg-gray-200 text-gray-700 rounded-full";
+                    button.dataset.filterKey = config.key;
+                    button.dataset.filterValue = value;
+                    button.textContent = value;
+                    quickFiltersInner.appendChild(button);
+                });
+            });
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', handleFilterClick));
+            checkFilterOverflow();
+        }
+
+        function renderCampaigns() {
+            let filteredCampaigns = allCampaigns.filter(campaign => {
+                const searchMatch = !activeFilters.searchTerm || (campaign[activeFilters.searchColumn] && String(campaign[activeFilters.searchColumn]).toLowerCase().includes(activeFilters.searchTerm.toLowerCase()));
+                const teamMatch = !activeFilters.accountTeam || campaign.accountTeam === activeFilters.accountTeam;
+                const jobStatusMatch = !activeFilters.jobStatus || campaign.jobStatus === activeFilters.jobStatus;
+                const campaignStatusMatch = !activeFilters.campaignStatus || campaign.campaignStatus === activeFilters.campaignStatus;
+                return searchMatch && teamMatch && jobStatusMatch && campaignStatusMatch;
+            });
+            
+            campaignGrid.innerHTML = '';
+            
+            if (filteredCampaigns.length === 0 && allCampaigns.length > 0) {
+                 const noResults = document.createElement('p');
+                 noResults.className = "text-gray-500 col-span-full text-center";
+                 noResults.innerText = 'Không tìm thấy chiến dịch nào phù hợp.';
+                 campaignGrid.appendChild(noResults);
+                 return;
+            }
+
+            filteredCampaigns.forEach(c => c.currentTimeline = getCurrentTimeline(c));
+            filteredCampaigns.sort((a, b) => {
+                const dateA = a.currentTimeline.startDateObj;
+                const dateB = b.currentTimeline.startDateObj;
+                if (!dateB) return -1;
+                if (!dateA) return 1;
+                return dateB.getTime() - dateA.getTime();
+            });
+
+            filteredCampaigns.forEach(createCampaignCard);
+        }
+
+        function createCampaignCard(campaign) {
+            const status = getStatusInfo(campaign.campaignStatus, campaign.jobStatus);
+            const timeline = campaign.currentTimeline;
+            const progress = calculateProgress(timeline.start, timeline.end);
+            
+            const card = document.createElement('div');
+            card.className = 'card bg-white rounded-2xl shadow-md border border-gray-200 p-5 flex flex-col justify-between';
+            card.dataset.jobNumber = campaign.jobNumber;
+            
+            card.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="px-3 py-1 text-xs font-medium rounded-full ${status.color}">
+                            <span class="material-symbols-outlined text-sm">${status.icon}</span>
+                            ${status.text}
+                        </span>
+                        <span class="text-xs text-gray-500 font-medium">${campaign.accountTeam || ''}</span>
+                    </div>
+                    <h2 class="text-xl font-bold text-[#1d192b] truncate" title="${campaign.campaign}">${campaign.campaign}</h2>
+                    <p class="text-sm text-gray-500 mb-4">${campaign.jobNumber || ''}</p>
+                    <p class="text-sm text-gray-700 mb-5 h-10 overflow-hidden">${campaign.description || 'No description available.'}</p>
+                </div>
+                <div>
+                    <div class="text-xs text-gray-500 uppercase font-medium">${timeline.stage}</div>
+                    <div class="flex justify-between items-center text-sm font-medium text-gray-800">
+                        <span>${timeline.start}</span>
+                        <span class="text-gray-400 mx-2">→</span>
+                        <span>${timeline.end}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                        <div class="bg-[#6750a4] h-1.5 rounded-full" style="width: ${progress}%"></div>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', () => navigateToDetail(campaign));
+            campaignGrid.appendChild(card);
+        }
+
+        // --- PAGE NAVIGATION & ROUTING ---
+        function navigateToDetail(campaign) {
+            window.location.hash = `campaign=${encodeURIComponent(campaign.jobNumber)}`;
+        }
+
+        function navigateToMain() {
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+            handleRouting();
+        }
+
+        function handleRouting() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#campaign=')) {
+                const params = new URLSearchParams(hash.substring(1));
+                const jobNumber = params.get('campaign');
+                const campaign = allCampaigns.find(c => c.jobNumber === jobNumber);
+
+                if (campaign) {
+                    mainPage.classList.add('hidden');
+                    detailPage.classList.remove('hidden');
+                    document.body.style.paddingTop = '0px'; 
+                    window.scrollTo(0, 0);
+                    detailCampaignTitle.textContent = campaign.campaign;
+                    detailCampaignJob.textContent = campaign.jobNumber;
+                    loadCampaignDetails(campaign);
+                } else {
+                    navigateToMain(); // Invalid hash or campaign not found
+                }
+            } else {
+                detailPage.classList.add('hidden');
+                mainPage.classList.remove('hidden');
+                adjustBodyPadding();
+                renderCampaigns();
+            }
+        }
+        
+        // --- DATA LOADING & RENDERING (DETAIL PAGE) ---
+        
+        function transformDataForGantt(tasks, assignments) {
+            const ganttTasks = [];
+            const ganttLinks = [];
+            let linkIdCounter = 1;
+
+            const tasksById = new Map(tasks.map(t => [t.iD, t]));
+
+            tasks.forEach(task => {
+                const startDate = parseDate(task.taskStart);
+                const endDate = parseDate(task.taskEnd);
+                if (!startDate || !endDate) return;
+
+                const correctedEndDate = new Date(endDate);
+                correctedEndDate.setDate(correctedEndDate.getDate() + 1);
+
+                const duration = gantt.calculateDuration({start_date: startDate, end_date: correctedEndDate});
+                const statusInfo = getGanttStatusInfo(task.taskStatus);
+
+                const ganttTask = {
+                    id: task.iD,
+                    text: `${task.iNDEXT}. ${task.description}`,
+                    start_date: startDate,
+                    duration: duration,
+                    parent: task.parent || 0,
+                    progress: (parseFloat(task.taskProgress) || 0) * 1,
+                    open: task.level === 'Parent',
+                    type: task.level === 'Parent' ? gantt.config.types.project : gantt.config.types.task,
+                    css: statusInfo.css,
+                    status: task.taskStatus,
+                    resources: (task.assignments || []).map(a => a.assignmentID)
+                };
+                ganttTasks.push(ganttTask);
+
+                if (task.previousTask && tasksById.has(task.previousTask)) {
+                    ganttLinks.push({
+                        id: linkIdCounter++,
+                        source: task.previousTask,
+                        target: task.iD,
+                        type: '0' // Finish to Start
+                    });
+                }
+            });
+
+            return { data: ganttTasks, links: ganttLinks };
+        }
+
+        function createResourcesForGantt(assignments) {
+            const resources = {};
+            assignments.forEach(a => {
+                const namePart = a.employees.split('@')[0];
+                const initial = namePart.charAt(0).toUpperCase();
+                const bgColor = getRandomHexColor();
+                const textColor = getContrastYIQ(bgColor);
+
+                resources[a.assignmentID] = {
+                    id: a.assignmentID,
+                    name: `${namePart} (${a.role})`,
+                    avatar: `https://placehold.co/40x40/${bgColor}/${textColor}?text=${initial}`
+                };
+            });
+            return resources;
+        }
+
+
+        async function loadCampaignDetails(campaign) {
+            ganttContainer.innerHTML = `<div class="flex items-center justify-center h-full"><div class="loader"></div></div>`;
+            
+            try {
+                const tasksResponse = await fetch(`${WEB_APP_URL}?tasksFor=${encodeURIComponent(campaign.jobNumber)}`);
+                if (!tasksResponse.ok) throw new Error(`Lỗi HTTP khi tải task: ${tasksResponse.status}`);
+                const tasksResult = await tasksResponse.json(); 
+                if (tasksResult.error) throw new Error(tasksResult.message);
+                
+                let rawTasks = tasksResult.data;
+                if (!rawTasks || rawTasks.length === 0) {
+                    ganttContainer.innerHTML = `<p class="text-gray-500 text-center p-8">Không có công việc nào cho chiến dịch này.</p>`;
+                    return;
+                }
+                
+                let tasks = rawTasks.map(fixObjectKeys);
+
+                const assignmentPromises = tasks.map(task => 
+                    fetch(`${WEB_APP_URL}?assignmentsFor=${encodeURIComponent(task.iD)}`).then(res => res.json())
+                );
+                
+                const assignmentResults = await Promise.all(assignmentPromises);
+                
+                let allAssignments = [];
+                tasks.forEach((task, index) => {
+                    const rawAssignments = assignmentResults[index].data || [];
+                    task.assignments = rawAssignments.map(fixObjectKeys);
+                    allAssignments.push(...task.assignments);
+                });
+
+                renderGanttChart(tasks, allAssignments, campaign);
+
+            } catch (error) {
+                ganttContainer.innerHTML = `<p class="text-red-500 text-center p-8">Không thể tải chi tiết chiến dịch: ${error.message}</p>`;
+            }
+        }
+        
+        function renderGanttChart(tasks, assignments, campaign){
+            gantt.clearAll();
+
+            const resourcesData = createResourcesForGantt(assignments);
+            const ganttData = transformDataForGantt(tasks, assignments);
+            
+            gantt.config.grid_width = 450;
+            gantt.config.columns = [ 
+                { name: "text", label: "Công Việc", tree: true, width: 350, template: (task) => `<span class="gantt_task_name ${task.css || ''}">${task.text}</span>` }, 
+                { name: "assignee", label: "Thực Hiện", width: 120, align: "left", template: (task) => { 
+                    if (!task.resources || !task.resources.length) return ""; 
+                    let html = '<div style="display:flex; align-items:center; gap: 4px;">'; 
+                    task.resources.forEach(resId => { 
+                        const resource = resourcesData[resId]; 
+                        if (resource) { 
+                            html += `<img src="${resource.avatar}" title="${resource.name}" style="width:24px; height:24px; border-radius:50%;">`; 
+                        } 
+                    }); 
+                    html += '</div>'; return html; 
+                }}, 
+                { name: "duration", label: "Thời Lượng", align: "center", width: 80 } 
+            ];
+            gantt.config.date_format = "%m/%d/%Y";
+            gantt.config.scales = [ { unit: "month", step: 1, format: "%F %Y" }, { unit: "day", step: 1, format: "%d" } ];
+            gantt.config.scale_height = 54;
+            gantt.config.work_time = true;
+            gantt.config.skip_off_time = true;
+            gantt.config.readonly = true;
+
+            const holidays = { "2025-09-01": true, "2025-09-02": true };
+            const holidayFormatter = gantt.date.date_to_str("%Y-%m-%d");
+
+            gantt.templates.timeline_cell_class = function(task, date) {
+                if (holidays[holidayFormatter(date)]) {
+                    return "weekend";
+                }
+                const day = date.getDay();
+                if (day === 0 || day === 6) {
+                    return "weekend";
+                }
+                return "";
+            };
+
+            gantt.templates.task_class = (start, end, task) => task.css || '';
+            gantt.templates.tooltip_text = (start, end, task) => { 
+                const statusInfo = getGanttStatusInfo(task.status);
+                let html = `<b>${task.text}</b><br/><b>Thời gian:</b> ${formatDate(start)} - ${formatDate(end)}<br/><b>Tiến độ:</b> ${Math.round(task.progress * 100)}%<br/><b>Trạng thái:</b> <span style="font-weight:bold; color:${statusInfo.color};">${task.status || 'N/A'}</span><br/>`; 
+                if (task.resources && task.resources.length) { 
+                    html += '<b>Thực hiện bởi:</b>'; 
+                    task.resources.forEach(resId => { 
+                        const resource = resourcesData[resId]; 
+                        if (resource) { 
+                            html += `<div class='tooltip_resource_row'><img class='tooltip_avatar' src='${resource.avatar}'><span>${resource.name}</span></div>`; 
+                        } 
+                    }); 
+                } return html; 
+            };
+            
+            gantt.plugins({ tooltip: true, marker: true });
+            
+            gantt.init("gantt-container");
+            gantt.parse(ganttData);
+
+            gantt.addMarker({ start_date: new Date(), css: "today_marker", text: "Hôm nay" });
+            const campaignStartDate = parseDate(campaign.ideationStart);
+            const campaignEndDate = parseDate(campaign.awoEnd);
+            if (campaignStartDate) {
+                gantt.addMarker({ start_date: campaignStartDate, css: "project_marker", text: "Bắt đầu" });
+            }
+            if (campaignEndDate) {
+                const endMarkerDate = new Date(campaignEndDate);
+                endMarkerDate.setDate(endMarkerDate.getDate() + 1);
+                gantt.addMarker({ start_date: endMarkerDate, css: "project_marker", text: "Kết thúc" });
+            }
+        }
+
+
+        // --- EVENT HANDLERS ---
+        function handleFilterClick(event) {
+            const btn = event.currentTarget;
+            const filterKey = btn.dataset.filterKey;
+            const filterValue = btn.dataset.filterValue;
+
+            document.querySelectorAll(`.filter-btn[data-filter-key="${filterKey}"]`).forEach(b => b.classList.remove('active'));
+            if (activeFilters[filterKey] === filterValue) {
+                activeFilters[filterKey] = null;
+            } else {
+                activeFilters[filterKey] = filterValue;
+                btn.classList.add('active');
+            }
+            renderCampaigns();
+        }
+
+        function handleSearch() {
+            activeFilters.searchTerm = searchInput.value;
+            activeFilters.searchColumn = searchColumnSelect.value;
+            renderCampaigns();
+        }
+
+        function handleScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const currentScrollY = window.scrollY;
+                    if (currentScrollY > 150 && currentScrollY > lastScrollY) {
+                        headerControls.classList.add("hidden");
+                    } else {
+                        headerControls.classList.remove("hidden");
+                    }
+                    lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY;
+                    if (currentScrollY > 300) {
+                        backToTopButton.classList.add('visible');
+                    } else {
+                        backToTopButton.classList.remove('visible');
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+        
+        function checkFilterOverflow() {
+            const { scrollWidth, clientWidth, scrollLeft } = filtersContainer;
+            const isOverflowing = scrollWidth > clientWidth;
+            
+            scrollRightBtn.classList.toggle('visible', isOverflowing && scrollLeft < (scrollWidth - clientWidth - 1));
+            scrollLeftBtn.classList.toggle('visible', isOverflowing && scrollLeft > 0);
+        }
+
+        // --- INITIALIZATION ---
+        async function initialize() {
+            if (WEB_APP_URL === "DÁN_URL_CỦA_BẠN_VÀO_ĐÂY" || !WEB_APP_URL) {
+                message.innerText = "Lỗi: Vui lòng thiết lập WEB_APP_URL trong mã nguồn HTML.";
+                loader.style.display = 'none';
+                return;
+            }
+            try {
+                const response = await fetch(WEB_APP_URL);
+                if (!response.ok) throw new Error(`Lỗi HTTP: ${response.status}`);
+                const result = await response.json();
+                if (result.error) throw new Error(result.message);
+
+                if (result.data && result.data.length > 0) {
+                    allCampaigns = result.data.map(fixObjectKeys); 
+                    populateFilters(allCampaigns);
+                    adjustBodyPadding();
+                    handleRouting(); // Let the router decide which page to show
+                    loadingOverlay.style.display = 'none';
+                } else {
+                    message.innerText = "Không có chiến dịch nào để hiển thị.";
+                    loader.style.display = 'none';
+                }
+            } catch (error) {
+                message.innerText = `Không thể lấy dữ liệu: ${error.message}`;
+                loader.style.display = 'none';
+            }
+        }
+        
+        searchInput.addEventListener('input', handleSearch);
+        searchColumnSelect.addEventListener('change', handleSearch);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', () => { adjustBodyPadding(); checkFilterOverflow(); });
+        backToTopButton.addEventListener('click', () => window.scrollTo(0, 0));
+        backToMainBtn.addEventListener('click', navigateToMain);
+        window.addEventListener('hashchange', handleRouting);
+        
+        // Filter scroll events
+        scrollLeftBtn.addEventListener('click', () => { filtersContainer.scrollLeft -= 250; });
+        scrollRightBtn.addEventListener('click', () => { filtersContainer.scrollLeft += 250; });
+        filtersContainer.addEventListener('scroll', checkFilterOverflow);
+        
+        window.addEventListener('load', initialize);
+
+    </script>
 </body>
 </html>
+
