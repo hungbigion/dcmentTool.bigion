@@ -49,6 +49,7 @@
             margin: 0;
             font-size: 1.5rem;
             color: #1F1F1F;
+            flex-grow: 1;
         }
         #controls-bar {
             position: sticky;
@@ -65,7 +66,7 @@
             gap: 16px;
         }
         #controls-bar.hidden {
-            transform: translateY(-120%);
+            transform: translateY(-140%);
         }
         .search-controls {
             display: flex;
@@ -170,7 +171,6 @@
             font-weight: 500;
             color: var(--md-sys-color-on-surface-variant);
         }
-        /* UPDATED: Active state for Top N buttons */
         #top-n-buttons md-filled-tonal-button.active {
             --md-filled-tonal-button-container-color: var(--md-sys-color-primary);
             --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-primary);
@@ -325,9 +325,12 @@
         <header>
             <span class="material-symbols-outlined">analytics</span>
             <h1>KOL Analysis Dashboard</h1>
+            <md-icon-button id="toggle-controls-btn" style="margin-left: auto;" title="Ẩn/hiện bộ lọc">
+                <span class="material-symbols-outlined" style="color:#6750a4;font-size: 35px;">search</span>
+            </md-icon-button>
         </header>
 
-        <div id="controls-bar">
+        <div id="controls-bar" class="hidden">
             <!-- Search Controls -->
             <div class="search-controls">
                 <md-filled-select id="search-column-select" label="Tìm kiếm trong cột" style="min-width: 180px;">
@@ -419,6 +422,7 @@
         let activeQuickFilters = [];
         let multiSelectValues = new Set();
         let topNValue = 20;
+        let isControlsManuallyHidden = true; // Changed: Start hidden by default
 
         const loader = document.getElementById('loader');
         const controlsBar = document.getElementById('controls-bar');
@@ -431,6 +435,7 @@
         const topNInput = document.getElementById('top-n-input');
         const profileCountLabel = document.getElementById('profile-count-label');
         const resetFiltersBtn = document.getElementById('reset-filters-btn');
+        const toggleControlsBtn = document.getElementById('toggle-controls-btn');
         const customDropdown = document.getElementById('custom-multi-select-dropdown');
         const dropdownSearchInput = document.getElementById('dropdown-search-input');
         const selectAllCheckbox = document.getElementById('select-all-checkbox');
@@ -443,8 +448,10 @@
 
         let lastScrollTop = 0;
         window.addEventListener('scroll', () => {
+            if (isControlsManuallyHidden) return; 
+
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > controlsBar.offsetHeight) {
+            if (scrollTop > lastScrollTop && scrollTop > 50) { // Added threshold
                 controlsBar.classList.add('hidden');
             } else {
                 controlsBar.classList.remove('hidden');
@@ -500,6 +507,15 @@
             });
             topNInput.addEventListener('input', debounce(handleTopNInputChange, 500));
             resetFiltersBtn.addEventListener('click', handleResetFilters);
+            
+            toggleControlsBtn.addEventListener('click', () => {
+                isControlsManuallyHidden = !isControlsManuallyHidden;
+                controlsBar.classList.toggle('hidden', isControlsManuallyHidden);
+                if (!isControlsManuallyHidden) {
+                     // Ensure it's visible if toggled on, regardless of scroll position
+                     controlsBar.classList.remove('hidden');
+                }
+            });
 
             dropdownSearchInput.addEventListener('input', () => populateMultiSelectMenu(searchColumnSelect.value));
             selectAllCheckbox.parentElement.addEventListener('click', handleSelectAllClick);
@@ -766,12 +782,12 @@
                 plotOptions: { bar: { horizontal: true } },
                 dataLabels: {
                     enabled: true,
-                    offsetX: 20,
+                    offsetX: -10,
                     style: { fontSize: '12px', colors: ['#fff'] },
                     formatter: (val) => formatCompactNumber(val)
                 },
                 title: {
-                    text: `Top ${data.length} Profiles (Filtered)`,
+                    text: `Top ${data.length} Profiles (Đã lọc)`,
                     align: 'center',
                     style: { fontSize: '16px', color: '#263238' }
                 },
