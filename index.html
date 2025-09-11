@@ -1,548 +1,915 @@
-<!doctype html>
-<meta charset="utf-8">
-<title>HỢP ĐỒNG FULL</title>
-<meta name="csrf-token" content="MHMXdIG4tBlzbq7sMs8y0wjq43Dtbf8PaMgnKDS3">
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced KOL Dashboard</title>
+    
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%236750A4' d='M4 19h4V9H4v10zm6-14h4v14h-4V5zm6 8h4v6h-4v-6z'/%3E%3C/svg%3E">
 
-<!-- jQuery library -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-<!-- Popper JS -->
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <!-- Material Web Components (M3) -->
+    <script type="module" src="https://esm.run/@material/web/all.js"></script>
 
-<!-- Latest compiled JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- ApexCharts Library -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-
-<style>
-    * {
-        font-family: "Times New Roman", Times, serif;
-    }
-    .item {
-    margin-right: 40px;
-    }
-    .item:last-child {
-    margin-right: 0;
-    }
-    body {
-        background: rgb(204, 204, 204);
-    }
-    #backtotop{
-        position: fixed;
-        z-index: 1000;
-    }
-
-    page {
-        background: white;
-        display: block;
-        margin: 0 auto;
-        margin-bottom: 0.5cm;
-        box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
-        align-items: center;
-    }
-
-    page[size="A5"][layout="portrait"] {
-        width: 14.8cm;
-    }
-
-
-   
-    @media print {
-        body,
-        #content {
+    <style>
+        :root {
+            /* Purple Theme (Reverted) */
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-surface-container-highest: #E6E0E9;
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-on-surface-variant: #49454F;
+        }
+        body {
+            background-color: #f7f2fa;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            box-shadow: 0;
-            font-size: 18px !important;
-        }
-
-        .big-title {
-            font-size: 18px !important;
-        }
-
-        .total-pay {
-            font-size: 15px !important;
-        }
-
-        @page {
-            size: auto;
         }
         
-        #content-split {
-            margin-top: 20px;
-            position: absolute;
-            top: 50%;
-            width: 100%;
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px;
         }
-
-        .height_hr {
-            border-top: 3px dashed black;
-            width: 100%;
-            position: absolute;
-            top: 49%;
+        header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
-
-        #content-split .div-logo {
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #1F1F1F;
+        }
+        #controls-bar {
+            position: sticky;
+            top: 0;
+            background-color: #f7f2fa;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            z-index: 100;
+            transition: transform 0.3s ease-in-out;
+            border: 1px solid var(--md-sys-color-outline);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        #controls-bar.hidden {
+            transform: translateY(-120%);
+        }
+        .search-controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
             position: relative;
-            top: -10px;
-            left: 10px;
         }
-    }
-
-    #content {
-        font-size: 10.5px;
-    }
-
-
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .bold {
-        font-weight: bold;
-    }
-
-    .big-title {
-        font-size: 15px;
-    }
-
-    #fixed-panel,
-    #fixed-show-user,
-    #fixed-show-reason {
-        font-size: 13px;
-    }
-
-
-    #content {
-        padding-left: 20px;
-        padding-right: 20px;
-        max-width: 19.5cm;
-        height: max-content;
-    }
-
-    #select-setup-print {
-        position: relative;
-        top: -2px;
-        background-color: #17a2b8;
-        color: white;
-    }
-
-    #setup-print {
-        position: fixed;
-        top: 480px;
-        left: 30px;
-        width: 150px;
-        height: 54px;
-        background-color: #ffffff;
-        padding: 10px;
-        border-radius: 5px;
-        /*font-size: 13px;*/
-        box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
-    }
-
-
-    .heigth-90px {
-        height: 90px !important;
-    }
-
-    #page {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        position: relative;
-        border: 1px solid black; 
-    }
-
-
-    .big-title {
-        text-transform: uppercase;
-        font-weight: bold;
-        /*font-size: 15px;*/
-        padding-bottom: 5px;
-    }
-
-    hr {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-
-    .bold {
-        font-weight: bold;
-    }
-
-    .info_student {
-        margin-top: 10px;
-        text-align: justify;
-    }
-
-    .info_contract {
-        margin-bottom: 5px !important
-    }
-    .fixed-button {
-            position: fixed;
-            bottom: 20px; /* Điều chỉnh vị trí từ dưới lên, bạn có thể thay đổi giá trị này */
-            right: 20px;  /* Điều chỉnh vị trí từ phải sang, bạn có thể thay đổi giá trị này */
+        .search-input-wrapper {
+            flex-grow: 1;
+            position: relative;
+        }
+        #autocomplete-list {
+            position: absolute;
+            background: #F2F2F2; 
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 4px;
             width: 100%;
-            max-width: 200px; /* Điều chỉnh chiều rộng tối đa của button */
+            z-index: 101;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        #autocomplete-list div {
+            padding: 12px 16px;
+            cursor: pointer;
+        }
+        #autocomplete-list div:hover {
+            background-color: var(--md-sys-color-surface-container-highest);
         }
 
-    @media only screen and (max-width: 1024px) {
-        #fixed-panel {
-            display: none !important;
+        .quick-filters-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        #list_option_print {
-            display: none !important;
+        .quick-filters-container {
+            overflow-x: auto;
+            flex-grow: 1;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
         }
-    }
-</style>
+        .quick-filters-container::-webkit-scrollbar {
+            display: none;
+        }
+        #quick-filters-scroller {
+            display: flex;
+            gap: 8px;
+            white-space: nowrap;
+            padding-bottom: 4px;
+        }
+        md-filter-chip { --md-filter-chip-container-height: 32px; }
+        .scroll-button {
+            visibility: hidden;
+        }
+        .scroll-button.visible {
+            visibility: visible;
+        }
+        .chart-card {
+            background-color: #fff;
+            border-radius: 16px;
+            padding: 24px;
+        }
+        #chart { width: 100%; }
+        .loader-container {
+            display: flex;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(255, 255, 255, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .google-loader {
+            display: flex;
+            gap: 10px;
+        }
+        .google-loader .dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            animation: google-bounce 1.4s infinite ease-in-out both;
+        }
+        .google-loader .dot:nth-child(1) { background-color: #4285F4; animation-delay: -0.32s; }
+        .google-loader .dot:nth-child(2) { background-color: #DB4437; animation-delay: -0.16s; }
+        .google-loader .dot:nth-child(3) { background-color: #F4B400; animation-delay: 0s; }
+        .google-loader .dot:nth-child(4) { background-color: #0F9D58; animation-delay: 0.16s; }
+
+        @keyframes google-bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        
+        .top-n-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .top-n-controls .label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        /* UPDATED: Active state for Top N buttons */
+        #top-n-buttons md-filled-tonal-button.active {
+            --md-filled-tonal-button-container-color: var(--md-sys-color-primary);
+            --md-filled-tonal-button-label-text-color: var(--md-sys-color-on-primary);
+            --md-filled-tonal-button-hover-label-text-color: var(--md-sys-color-on-primary);
+            --md-filled-tonal-button-focus-label-text-color: var(--md-sys-color-on-primary);
+            --md-filled-tonal-button-pressed-label-text-color: var(--md-sys-color-on-primary);
+        }
+
+        #custom-multi-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #FEF7FF;
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 102;
+            padding: 8px;
+            display: none;
+        }
+        #custom-multi-select-dropdown .dropdown-search-wrapper {
+            position: relative;
+            padding: 8px;
+        }
+        #custom-multi-select-dropdown .dropdown-search-wrapper .icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--md-sys-color-on-surface-variant);
+        }
+        #custom-multi-select-dropdown .dropdown-search {
+            width: 100%;
+            padding: 8px 8px 8px 40px;
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 16px;
+            background: #F3EDF7;
+            box-sizing: border-box;
+        }
+        #custom-multi-select-dropdown .select-all-wrapper {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        #custom-multi-select-dropdown .options-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        #custom-multi-select-dropdown .option-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        #custom-multi-select-dropdown .option-item:hover {
+            background-color: var(--md-sys-color-surface-container-highest);
+        }
+
+        #details-sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.4);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        #details-sidebar-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        #details-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            max-width: 90vw;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -4px 0 16px rgba(0,0,0,0.1);
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        #details-sidebar.visible {
+            transform: translateX(0);
+        }
+        #details-sidebar .header {
+            padding: 16px;
+            border-bottom: 1px solid #E0E0E0;
+            flex-shrink: 0;
+        }
+        #details-sidebar .content {
+            padding: 16px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .detail-item {
+            margin-bottom: 12px;
+        }
+        .detail-item .label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 4px;
+        }
+        .detail-item .value {
+            font-size: 1rem;
+            color: #222;
+            word-break: break-all;
+        }
+        
+        #profile-preview-card {
+            border: 1px solid var(--md-sys-color-outline);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            background-color: #f7f2fa;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        #profile-preview-card .info {
+            display: flex;
+            flex-direction: column;
+        }
+        #profile-preview-card .platform {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+        #profile-preview-card .name {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        #profile-preview-card .username {
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
 <body>
-    <button onclick="print()" id="backtotop" class="btn btn-info fixed-button" style="width: 100%"><i class="fa fa-print"></i> <span
-        class="language_print"></span></button>
-    <page size="A5" id="page" layout="portrait">
-        <div id="content">
-            <div style="border: none; padding: 10px; display: flex; align-items: center;justify-content: space-between;">
-                <div>
-                    <img src="https://www.appsheet.com:443/fsimage.png?appid=237238ed-4230-4db1-ab50-e492cea9cdba&datasource=google&filename=DocId%3D1egTRwdbY1nciPNbp0oyfwtw2nkjAaPEk&signature=2a1e24bf7c4923ebddf506465345589f92fe6343600fded5f6a451ffc64d134b&tableprovider=google&userid=925719472" 
-                    alt="LEA Logo" style="width: 80px;">
-                </div>
-                <div style="text-align: center;font-weight: bolder;margin-right: 70px;margin-left: 20px;">
-                    <h7 style="margin: 0;">TRUNG TÂM NGOẠI NGỮ LIÊN ÂU MỸ</h7>
-                    <p style="margin: 0;">
-                        ĐT: TPK - 02743618998 - TU: 02743639995 - HN: 02746549595 <br>
-                        Websites: www.lea.edu.vn - Hotline: 0274.9999.899
-                    </p>
-                </div>
-                <div></div>
-            </div>
-            <h6 style="text-align: center;font-weight: bolder;">PHIẾU THU</h6>
-            <div style="display: flex; justify-content: flex-end; ">
-                <div style="text-align: right;">
-                    <span style="font-style: oblique;">Số chứng từ:&ensp;</span>
-                    <span id="sct"></span>
-                </div>
-            </div>
-            <p><span id="nct">27/09/2024</span></p>
-            <div style="justify-content: start;display: flex;">
-                <p class="item"><span style="font-weight: bolder;">Tên học viên:&ensp;</span> <span id="ten"></span></p>
-                <p class="item"><strong>Số điện thoại:&ensp;</strong><span id="sdt"></span></p>
-            </div>
-            <div>
-                <p><strong>Lớp:&ensp;</strong><span id="lop"></span></p>
-                <div style="justify-content: start;display: flex;">                
-                    <p class="item"><strong>Ngày khai giảng:&ensp;</strong> <span id="nkg"></span></p>
-                    <p class="item"><strong>Ngày kết thúc:&ensp;</strong> <span id="nkt"></span></p>
-                </div>
-                <p><strong>Ngày vào học:&ensp;</strong> <span id="nvh"></span></p>
-            </div>
-            <div>
-                <p><strong>Ghi chú:&ensp;</strong> <span id="note"></span></p>
-            </div>
-            <div>
-                <div style="justify-content: start;display: flex;">
-                    <p class="item"><strong>Khóa học:&ensp;</strong> <span id="khoahoc"></span></p>
-                    <p class="item"><strong>Học phí:&ensp;</strong> <span id="hphi"></span> ₫</p>
-                </div>
-                <!-- inline element -->
-                <div style="display: inline;">
-                    <p><strong>Giáo trình:&ensp;</strong><span id="tengt"></span></p>
-                    <p><strong>Tiền giáo trình:&ensp;</strong><span id="tiengt"></span> ₫</p>
+    <div class="container">
+        <header>
+            <span class="material-symbols-outlined">analytics</span>
+            <h1>KOL Analysis Dashboard</h1>
+        </header>
+
+        <div id="controls-bar">
+            <!-- Search Controls -->
+            <div class="search-controls">
+                <md-filled-select id="search-column-select" label="Tìm kiếm trong cột" style="min-width: 180px;">
+                    <md-select-option selected value="Name"><div slot="headline">Tên (Name)</div></md-select-option>
+                    <md-select-option value="HashTags"><div slot="headline">Hashtag</div></md-select-option>
+                    <md-select-option value="Hạng mục"><div slot="headline">Hạng mục</div></md-select-option>
+                    <md-select-option value="Địa chỉ"><div slot="headline">Địa chỉ</div></md-select-option>
+                </md-filled-select>
+                
+                <div class="search-input-wrapper">
+                    <md-filled-text-field id="search-input" label="Nhập từ khóa..." style="width: 100%;"></md-filled-text-field>
+                    <md-filled-button id="multi-select-button" style="display: none; width: 100%;">Chọn giá trị</md-filled-button>
+                    <div id="autocomplete-list" style="display: none;"></div>
+                    <!-- Custom Dropdown -->
+                    <div id="custom-multi-select-dropdown">
+                        <div class="dropdown-search-wrapper">
+                             <span class="material-symbols-outlined icon">search</span>
+                             <input type="text" id="dropdown-search-input" class="dropdown-search" placeholder="Tìm kiếm giá trị...">
+                        </div>
+                        <div class="select-all-wrapper">
+                            <md-checkbox id="select-all-checkbox"></md-checkbox>
+                            <label for="select-all-checkbox">Chọn tất cả</label>
+                        </div>
+                        <div id="dropdown-options-list" class="options-list"></div>
+                    </div>
                 </div>
             </div>
-        <!-- inline element -->
-            <div style="display: inline;">
-                <p><strong>Ưu đãi: </strong>&ensp;<span id="pcdc"></span>&emsp;&emsp;&emsp;&ensp;<strong>Thành tiền ưu đãi: </strong>&ensp;<span id="prdc"></span> ₫</p>
-                <p><strong>Ưu đãi khác: </strong>&ensp;<span id="pcdc"></span>&emsp;<strong>Thành tiền ưu đãi khác: </strong>&ensp;<span id="prdc"></span> ₫</p>
-            </div>
-            <div>
-                <div style="justify-content: start;display: flex;">
-                    <p class="item"><strong>Thành tiền:&ensp;</strong><span id="ttien"></span> ₫</p>
-                    <p class="item"><strong>Số tiền thanh toán:&ensp;</strong><span id="ttt"></span> ₫</p>
+            <!-- Quick Filters -->
+            <div class="quick-filters-wrapper">
+                <md-icon-button class="scroll-button" id="scroll-left-button"><span class="material-symbols-outlined">chevron_left</span></md-icon-button>
+                <div class="quick-filters-container" id="quick-filters-container">
+                    <div id="quick-filters-scroller"></div>
                 </div>
-                <p><strong>Còn lại:&ensp;</strong><span id="conlai"></span></p>
+                <md-icon-button class="scroll-button" id="scroll-right-button"><span class="material-symbols-outlined">chevron_right</span></md-icon-button>
             </div>
-            <div>
-                <p><strong>Tổng tiền bằng chữ:&ensp;</strong><span id="ttientext"></span><br>
-                    <strong>Số tiền thanh toán bằng chữ:&ensp;</strong><span id="ttttext"></span><br>
-                    <strong>Còn lại bằng chữ:&ensp;</strong><span id="conlaitext"></span>
-                </p>
-            </div>
-            <div >
-                <div style="text-align: center; display: flex; justify-content: space-between;padding-left: 20px;padding-right: 20px;">
-                    <div><strong>Người lập phiếu </strong><br> (Ký ghi rõ họ tên)</div>
-                    <div><strong>Người nộp tiền</strong> <br> (Ký ghi rõ họ tên)</div>
-                    <div><strong>Thủ trưởng đơn vị</strong> <br> (Ký ghi rõ họ tên)</div>
+            <!-- Top N Controls -->
+            <div class="top-n-controls">
+                <span class="label">Hiển thị Top:</span>
+                <div id="top-n-buttons" style="display: contents;">
+                    <md-filled-tonal-button data-value="10">10</md-filled-tonal-button>
+                    <md-filled-tonal-button data-value="20" class="active">20</md-filled-tonal-button>
+                    <md-filled-tonal-button data-value="50">50</md-filled-tonal-button>
+                    <md-filled-tonal-button data-value="100">100</md-filled-tonal-button>
                 </div>
-            </div>
-            <div style="margin-top: 120px;font-size: 12px;">
-                <p><strong>Lưu ý:</strong> Trung tâm sẽ không hoàn lại học phí trong bất kỳ trường hợp nào.<br>
-                    Đối với các trường hợp đặc biệt, học phí sẽ được bảo lưu trong thời gian 1 khóa</p>
+                <md-filled-text-field id="top-n-input" label="Tự nhập" type="number" min="1" style="width: 100px;"></md-filled-text-field>
+                <md-outlined-button id="reset-filters-btn">
+                    Reset Filters
+                    <span slot="icon" class="material-symbols-outlined">restart_alt</span>
+                </md-outlined-button>
+                <span id="profile-count-label" style="font-size: 0.9rem; color: var(--md-sys-color-on-surface-variant); margin-left: auto;"></span>
             </div>
         </div>
-    </page>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"
-        integrity="sha512-d5Jr3NflEZmFDdFHZtxeJtBzk0eB+kkRXWFQqEc1EKmolXjHm2IKCA7kTvXBNjIYzjXfD5XzIjaaErpkZHCkBg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.centeronline.edu.vn/js/customer.js" type="text/javascript"></script>
-    <script>
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(window.location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        }
-        // truyền id vào đây
-        var parameters = ['sct','nct','ten','sdt','lop','khoahoc','nkg','nkt','nvh','note','hphi','tengt','tiengt','pcdc','prdc','ttien','ttt','conlai'];
-        parameters.forEach(function (param) {
-            var value = getUrlParameter(param);
-            setTextContentById(param, value);
-        });
-        document.addEventListener('keydown', function(event) {
-             if (event.code === 'Space') {
-                 event.preventDefault(); 
-                 print(); 
-             }
-         });
-         $('#printButton').on('click', function() {
-             print(); 
-         });
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        // Function to set text content if element exists
-        function setTextContentById(id, value) {
-            var element = document.getElementById(id);
-            if (element) {
-                element.textContent = value;
-            }
-        }
-        // num to text
-        // Hàm chuyển số thành chữ số tiền
-function numberToWords(num) {
-    const units = ['không', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
-    const teens = ['mười', 'mười một', 'mười hai', 'mười ba', 'mười bốn', 'mười lăm', 'mười sáu', 'mười bảy', 'mười tám', 'mười chín'];
-    const tens = ['', '', 'hai mươi', 'ba mươi', 'bốn mươi', 'năm mươi', 'sáu mươi', 'bảy mươi', 'tám mươi', 'chín mươi'];
-    const thousands = ['', 'nghìn', 'triệu', 'tỷ'];
-
-    if (num === 0) return 'không đồng';
-
-    const convertChunk = (n) => {
-        let str = '';
         
-        if (n >= 100) {
-            str += units[Math.floor(n / 100)] + ' trăm ';
-            n %= 100;
-        }
+        <div class="chart-card">
+            <div id="chart"></div>
+        </div>
+    </div>
 
-        if (n >= 20) {
-            str += tens[Math.floor(n / 10)] + ' ';
-            n %= 10;
-        } else if (n >= 10) {
-            str += teens[n - 10] + ' ';
-            n = 0;
-        }
+    <div id="loader" class="loader-container">
+        <!-- Loader HTML -->
+        <div class="google-loader">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <p>Đang tải dữ liệu...</p>
+    </div>
 
-        if (n > 0) {
-            str += units[n] + ' ';
-        }
+    <!-- Details Sidebar -->
+    <div id="details-sidebar-overlay"></div>
+    <div id="details-sidebar">
+        <div class="header">
+            <h4 style="flex-grow: 1;">Chi tiết Profile</h4>
+            <md-icon-button id="close-sidebar-btn"><span class="material-symbols-outlined">close</span></md-icon-button>
+        </div>
+        <div class="content" id="sidebar-content">
+            <!-- Preview container -->
+            <div id="profile-preview-container"></div>
+            <!-- Details will be populated here -->
+            <div id="profile-details-list"></div>
+        </div>
+    </div>
 
-        return str.trim();
-    };
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbx5RVI_kAy5o0FOGjuw59EXWwc5RnpXDs2KRaB6YTqwvh3pawa7fJh5F4OQOwTpg5ss/exec"; 
 
-    let result = '';
-    let unitIndex = 0;
+        let fullData = [], chart, currentChartData = [], allUniqueHashtags = [];
+        let activeQuickFilters = [];
+        let multiSelectValues = new Set();
+        let topNValue = 20;
 
-    while (num > 0) {
-        const chunk = num % 1000;
-        if (chunk > 0) {
-            result = convertChunk(chunk) + ' ' + thousands[unitIndex] + ' ' + result;
-        }
-        num = Math.floor(num / 1000);
-        unitIndex++;
-    }
+        const loader = document.getElementById('loader');
+        const controlsBar = document.getElementById('controls-bar');
+        const searchInput = document.getElementById('search-input');
+        const searchColumnSelect = document.getElementById('search-column-select');
+        const multiSelectButton = document.getElementById('multi-select-button');
+        const autocompleteList = document.getElementById('autocomplete-list');
+        const chartDiv = document.getElementById('chart');
+        const topNButtonsContainer = document.getElementById('top-n-buttons');
+        const topNInput = document.getElementById('top-n-input');
+        const profileCountLabel = document.getElementById('profile-count-label');
+        const resetFiltersBtn = document.getElementById('reset-filters-btn');
+        const customDropdown = document.getElementById('custom-multi-select-dropdown');
+        const dropdownSearchInput = document.getElementById('dropdown-search-input');
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const optionsList = document.getElementById('dropdown-options-list');
+        const sidebarOverlay = document.getElementById('details-sidebar-overlay');
+        const sidebar = document.getElementById('details-sidebar');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const previewContainer = document.getElementById('profile-preview-container');
+        const detailsList = document.getElementById('profile-details-list');
 
-    return result.trim() + ' đồng';
-}
-
-// Hàm để lấy giá trị từ URL, chuyển đổi thành chữ và set cho element
-function setValuesFromParameters() {
-    // Danh sách các parameter và ID của element HTML
-    const paramNames = ['ttien', 'ttt', 'conlai'];
-    const elementIds = ['ttientext', 'ttttext', 'conlaitext'];
-
-    paramNames.forEach((paramName, index) => {
-        // Lấy giá trị từ parameter
-        let paramValue = getUrlParameter(paramName);
-
-        if (paramValue) {
-            // Chuyển đổi giá trị thành số và loại bỏ các ký tự không phải số
-            let numberValue = parseInt(paramValue.replace(/\./g, '').replace(/₫/, '').trim(), 10);
-
-            if (!isNaN(numberValue)) {
-                // Chuyển số thành chữ số tiền
-                let textValue = numberToWords(numberValue);
-
-                // Set giá trị vào element HTML tương ứng
-                let textElement = document.getElementById(elementIds[index]);
-                if (textElement) {
-                    textElement.innerText = textValue;
-                }
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > controlsBar.offsetHeight) {
+                controlsBar.classList.add('hidden');
+            } else {
+                controlsBar.classList.remove('hidden');
             }
-        }
-    });
-}
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
 
-// Gọi hàm để xử lý và set các giá trị
-setValuesFromParameters();
-// Hàm định dạng số thành chuỗi có dấu chấm phân cách hàng nghìn
-function formatNumberWithDots(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                const result = await response.json();
+                if (!result.success) throw new Error(result.error || "API returned an error.");
+                
+                fullData = result.data.map(profile => {
+                    if (!profile.Name || profile.Name.trim() === '') {
+                        profile.Name = getUsernameFromUrl(profile.URL) || 'Unknown';
+                    }
+                    return profile;
+                });
+                
+                const allHashtags = fullData
+                    .flatMap(p => (p.HashTags || '').split(','))
+                    .map(tag => tag.trim().replace(/^#/, ''))
+                    .filter(Boolean);
+                allUniqueHashtags = [...new Set(allHashtags)];
 
-// Hàm để lấy giá trị từ URL, định dạng và set cho element
-function setFormattedNumbersFromParameters() {
-    // Danh sách các parameter và ID của element HTML
-    const paramNames = ['hphi','tiengt','prdc','ttien','ttt','conlai'];
-    const elementIds = ['hphi','tiengt','prdc','ttien','ttt','conlai'];
-
-    paramNames.forEach((paramName, index) => {
-        // Lấy giá trị từ parameter
-        let paramValue = getUrlParameter(paramName);
-
-        if (paramValue) {
-            // Chuyển giá trị thành số và loại bỏ các ký tự không phải số
-            let numberValue = parseInt(paramValue.replace(/\./g, '').replace(/₫/, '').trim(), 10);
-
-            if (!isNaN(numberValue)) {
-                // Định dạng số thành chuỗi có dấu chấm phân cách hàng nghìn
-                let formattedValue = formatNumberWithDots(numberValue);
-
-                // Set giá trị đã định dạng vào element HTML tương ứng
-                let textElement = document.getElementById(elementIds[index]);
-                if (textElement) {
-                    textElement.innerText = formattedValue;
-                }
-            }
-        }
-    });
-}
-
-// Gọi hàm để xử lý và set các giá trị
-setFormattedNumbersFromParameters();
-// xử lý date
-    // Hàm chuyển đổi định dạng ngày từ mm/dd/yyyy sang dd/mm/yyyy
-    function convertDateFormat(dateStr) {
-        // Tách chuỗi ngày bằng dấu "/"
-        const parts = dateStr.split('/');
-        if (parts.length === 3) {
-            const month = parts[0];
-            const day = parts[1];
-            const year = parts[2];
-            // Trả về chuỗi theo định dạng dd/mm/yyyy
-            return `${day}/${month}/${year}`;
-        }
-        return dateStr; // Trả về nguyên chuỗi nếu không đúng định dạng
-    }
-
-    // Hàm để lấy giá trị ngày từ URL, chuyển đổi và set cho element
-    function setFormattedDatesFromParameters() {
-        // Danh sách các parameter và ID của element HTML
-        const paramNames = ['nkg','nkt','nvh'];
-        const elementIds = ['nkg','nkt','nvh'];
-
-        paramNames.forEach((paramName, index) => {
-            // Lấy giá trị từ parameter
-            let paramValue = getUrlParameter(paramName);
-
-            if (paramValue) {
-                // Chuyển đổi định dạng ngày từ mm/dd/yyyy sang dd/mm/yyyy
-                let formattedDate = convertDateFormat(paramValue);
-
-                // Set giá trị ngày đã chuyển đổi vào element HTML tương ứng
-                let dateElement = document.getElementById(elementIds[index]);
-                if (dateElement) {
-                    dateElement.innerText = formattedDate;
-                }
+                populateQuickFilters();
+                setupFilterEventListeners();
+                applyFiltersAndRender();
+            } catch (error) {
+                console.error("Failed to load data:", error);
+                chartDiv.innerHTML = `<p>Error loading data: ${error.message}</p>`;
+            } finally {
+                loader.style.display = 'none';
             }
         });
-    }
+        
+        function setupFilterEventListeners() {
+            searchInput.addEventListener('input', debounce(handleSearchInput, 300));
+            searchInput.addEventListener('mousedown', () => autocompleteList.style.display = 'block');
+            searchInput.addEventListener('blur', () => setTimeout(() => autocompleteList.style.display = 'none', 150));
+            searchColumnSelect.addEventListener('change', handleSearchColumnChange);
+            
+            multiSelectButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                customDropdown.style.display = customDropdown.style.display === 'block' ? 'none' : 'block';
+            });
 
-    // Gọi hàm để xử lý và set các giá trị
-    setFormattedDatesFromParameters();
-    // Hàm chuyển đổi định dạng mm/dd/yyyy sang "Ngày dd, Tháng mm Năm yyyy"
-function convertDateToText(dateStr) {
-    const monthNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-    
-    // Tách chuỗi ngày bằng dấu "/"
-    const parts = dateStr.split('/');
-    if (parts.length === 3) {
-        const month = monthNames[parseInt(parts[0], 10) - 1]; // Lấy tháng từ 0-11
-        const day = parseInt(parts[1], 10); // Lấy ngày
-        const year = parts[2]; // Lấy năm
-        // Trả về chuỗi theo định dạng "Ngày dd, Tháng mm Năm yyyy"
-        return `Ngày ${day}, Tháng ${month} Năm ${year}`;
-    }
-    return dateStr; // Trả về nguyên chuỗi nếu không đúng định dạng
-}
+            topNButtonsContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('md-filled-tonal-button');
+                if (button) handleTopNButtonClick(button);
+            });
+            topNInput.addEventListener('input', debounce(handleTopNInputChange, 500));
+            resetFiltersBtn.addEventListener('click', handleResetFilters);
 
-// Hàm để lấy giá trị ngày từ URL, chuyển đổi và set vào element
-function setFormattedDateTextFromParameters() {
-    // Danh sách các parameter và ID của element HTML
-    const paramNames = ['nct'];
-    const elementIds = ['nct'];
+            dropdownSearchInput.addEventListener('input', () => populateMultiSelectMenu(searchColumnSelect.value));
+            selectAllCheckbox.parentElement.addEventListener('click', handleSelectAllClick);
+            document.addEventListener('click', (e) => {
+                if (!customDropdown.contains(e.target) && e.target !== multiSelectButton) {
+                    customDropdown.style.display = 'none';
+                }
+            });
 
-    paramNames.forEach((paramName, index) => {
-        // Lấy giá trị từ parameter
-        let paramValue = getUrlParameter(paramName);
+            closeSidebarBtn.addEventListener('click', hideProfileDetails);
+            sidebarOverlay.addEventListener('click', hideProfileDetails);
+        }
+        
+        function populateQuickFilters() {
+            const scroller = document.getElementById('quick-filters-scroller');
+            const filterCategories = ['Platform', 'Phân loại', 'Giới tính'];
+            scroller.innerHTML = '';
 
-        if (paramValue) {
-            // Chuyển đổi ngày thành đoạn text
-            let formattedDateText = convertDateToText(paramValue);
+            filterCategories.forEach(category => {
+                const uniqueValues = [...new Set(fullData.map(item => item[category]).filter(Boolean))].sort();
+                uniqueValues.forEach(value => {
+                    const chip = document.createElement('md-filter-chip');
+                    chip.label = value;
+                    chip.dataset.category = category;
+                    chip.dataset.value = value;
+                    chip.addEventListener('click', () => handleQuickFilterClick(chip));
+                    scroller.appendChild(chip);
+                });
+            });
+            setupScrollerButtons();
+        }
 
-            // Set giá trị đã chuyển đổi vào element HTML tương ứng
-            let dateElement = document.getElementById(elementIds[index]);
-            if (dateElement) {
-                dateElement.innerText = formattedDateText;
+        function handleQuickFilterClick(clickedChip) {
+            const category = clickedChip.dataset.category;
+            const value = clickedChip.dataset.value;
+            const filterIndex = activeQuickFilters.findIndex(f => f.category === category && f.value === value);
+
+            if (filterIndex > -1) {
+                activeQuickFilters.splice(filterIndex, 1);
+                clickedChip.selected = false;
+            } else {
+                activeQuickFilters.push({ category, value });
+                clickedChip.selected = true;
+            }
+            applyFiltersAndRender();
+        }
+        
+        function handleSearchColumnChange() {
+            const selectedColumn = searchColumnSelect.value;
+            multiSelectValues.clear(); 
+            searchInput.value = '';
+            customDropdown.style.display = 'none'; 
+
+            if (selectedColumn === 'Địa chỉ' || selectedColumn === 'Hạng mục') {
+                searchInput.style.display = 'none';
+                multiSelectButton.style.display = 'flex';
+                multiSelectButton.textContent = `Chọn ${selectedColumn}`;
+                populateMultiSelectMenu(selectedColumn);
+            } else {
+                searchInput.style.display = 'flex';
+                multiSelectButton.style.display = 'none';
+            }
+            applyFiltersAndRender();
+        }
+
+        function populateMultiSelectMenu(column) {
+            optionsList.innerHTML = '';
+            const searchTerm = dropdownSearchInput.value.toLowerCase();
+            const uniqueValues = [...new Set(fullData.map(item => item[column]).filter(Boolean))].sort();
+            
+            const filteredValues = uniqueValues.filter(v => v.toLowerCase().includes(searchTerm));
+
+            filteredValues.forEach(value => {
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                
+                const checkbox = document.createElement('md-checkbox');
+                checkbox.value = value;
+                checkbox.checked = multiSelectValues.has(value);
+                
+                const label = document.createElement('label');
+                label.textContent = value;
+                label.style.flexGrow = 1;
+
+                optionItem.append(checkbox, label);
+                optionItem.addEventListener('click', () => {
+                     checkbox.checked = !checkbox.checked;
+                     handleMultiSelectChange(checkbox);
+                });
+                optionsList.appendChild(optionItem);
+            });
+            updateSelectAllState();
+        }
+        
+        function handleMultiSelectChange(checkbox) {
+            if (checkbox.checked) {
+                multiSelectValues.add(checkbox.value);
+            } else {
+                multiSelectValues.delete(checkbox.value);
+            }
+            
+            updateSelectAllState();
+            
+            multiSelectButton.textContent = `${searchColumnSelect.value} (${multiSelectValues.size} đã chọn)`;
+            if (multiSelectValues.size === 0) {
+                 multiSelectButton.textContent = `Chọn ${searchColumnSelect.value}`;
+            }
+            applyFiltersAndRender();
+        }
+
+        function handleSelectAllClick() {
+            const currentlyVisibleOptions = [...optionsList.querySelectorAll('.option-item md-checkbox')].map(cb => cb.value);
+            const shouldSelectAll = !selectAllCheckbox.checked;
+            
+            currentlyVisibleOptions.forEach(value => {
+                 if (shouldSelectAll) {
+                     multiSelectValues.add(value);
+                 } else {
+                     multiSelectValues.delete(value);
+                 }
+            });
+
+            populateMultiSelectMenu(searchColumnSelect.value);
+            handleMultiSelectChange({checked: shouldSelectAll});
+        }
+
+        function updateSelectAllState() {
+             const currentlyVisibleOptions = [...optionsList.querySelectorAll('.option-item md-checkbox')].map(cb => cb.value);
+             const allVisibleSelected = currentlyVisibleOptions.length > 0 && currentlyVisibleOptions.every(v => multiSelectValues.has(v));
+             selectAllCheckbox.checked = allVisibleSelected;
+        }
+
+        function handleSearchInput() {
+            const column = searchColumnSelect.value;
+            const term = searchInput.value.toLowerCase();
+            let suggestions = [];
+
+            if (column === 'Name' && term.length > 1) {
+                const uniqueNames = [...new Set(fullData.map(p => p.Name).filter(Boolean))];
+                suggestions = uniqueNames.filter(name => name.toLowerCase().includes(term));
+            } else if (column === 'HashTags' && term.length > 1) {
+                suggestions = allUniqueHashtags.filter(tag => tag.toLowerCase().includes(term));
+            }
+            
+            if (suggestions.length > 0) {
+                populateAutocomplete(suggestions.slice(0, 5));
+            } else {
+                autocompleteList.style.display = 'none';
+            }
+
+            applyFiltersAndRender();
+        }
+
+        function handleTopNButtonClick(clickedButton) {
+            const value = parseInt(clickedButton.dataset.value, 10);
+            if (topNValue === value) return;
+            topNValue = value;
+            topNInput.value = '';
+            document.querySelectorAll('#top-n-buttons md-filled-tonal-button').forEach(btn => btn.classList.remove('active'));
+            clickedButton.classList.add('active');
+            applyFiltersAndRender();
+        }
+
+        function handleTopNInputChange() {
+            const value = parseInt(topNInput.value, 10);
+            if (value > 0 && topNValue !== value) {
+                topNValue = value;
+                document.querySelectorAll('#top-n-buttons md-filled-tonal-button').forEach(btn => btn.classList.remove('active'));
+                applyFiltersAndRender();
+            } else if (!topNInput.value) {
+                const defaultButton = document.querySelector('#top-n-buttons md-filled-tonal-button[data-value="20"]');
+                if (defaultButton) handleTopNButtonClick(defaultButton);
             }
         }
-    });
-}
-
-// Gọi hàm để xử lý và set các giá trị
-setFormattedDateTextFromParameters();
-        function print() {
-            $('#content').printThis({
-                debug: false, // show the iframe for debugging
-                importCSS: true, // import parent page css
-                importStyle: true, // import style tags
-                printContainer: true, // print outer container/$.selector
-                // loadCSS: ["assets/vendors/base/vendors.bundle.css", ""], // path to additional css file - use an array [] for multiple
-                pageTitle: "", // add title to print page
-                removeInline: false, // remove inline styles from print elements
-                removeInlineSelector: "*", // custom selectors to filter inline styles. removeInline must be true
-                printDelay: 333, // variable print delay
-                header: null, // prefix to html
-                footer: null, // postfix to html
-                base: false, // preserve the BASE tag or accept a string for the URL
-                formValues: true, // preserve input/form values
-                canvas: false, // copy canvas content
-                removeScripts: false, // remove script tags from print content
-                copyTagClasses: false, // copy classes from the html & body tag
-                beforePrintEvent: null, // function for printEvent in iframe
-                beforePrint: null, // function called before iframe is filled
-                afterPrint: null // function called before iframe is removed
-            });
+        
+        function handleResetFilters() {
+            activeQuickFilters = [];
+            multiSelectValues.clear();
+            searchInput.value = '';
+            searchColumnSelect.value = 'Name';
+            handleSearchColumnChange();
+            
+            document.querySelectorAll('#quick-filters-scroller md-filter-chip').forEach(c => c.selected = false);
+            
+            const defaultTopButton = document.querySelector('#top-n-buttons md-filled-tonal-button[data-value="20"]');
+            if(defaultTopButton) handleTopNButtonClick(defaultTopButton);
+            else {
+                 topNValue = 20;
+                 applyFiltersAndRender();
+            }
         }
-        // Gọi hàm để cập nhật giá trị khi trang được tải
+
+        function populateAutocomplete(suggestions) {
+            autocompleteList.innerHTML = '';
+            suggestions.forEach(suggestion => {
+                const item = document.createElement('div');
+                item.textContent = suggestion;
+                item.addEventListener('mousedown', () => {
+                    searchInput.value = suggestion;
+                    autocompleteList.style.display = 'none';
+                    applyFiltersAndRender();
+                });
+                autocompleteList.appendChild(item);
+            });
+            autocompleteList.style.display = 'block';
+        }
+
+        function applyFiltersAndRender() {
+            let filteredData = [...fullData];
+            
+            const groupedQuickFilters = activeQuickFilters.reduce((acc, filter) => {
+                if (!acc[filter.category]) acc[filter.category] = [];
+                acc[filter.category].push(filter.value);
+                return acc;
+            }, {});
+
+            for (const category in groupedQuickFilters) {
+                const values = groupedQuickFilters[category];
+                if (values.length > 0) {
+                    filteredData = filteredData.filter(profile => values.includes(profile[category]));
+                }
+            }
+            
+            const selectedSearchColumn = searchColumnSelect.value;
+            if (selectedSearchColumn === 'Địa chỉ' || selectedSearchColumn === 'Hạng mục') {
+                if (multiSelectValues.size > 0) {
+                    filteredData = filteredData.filter(p => multiSelectValues.has(p[selectedSearchColumn]));
+                }
+            } else {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                if (searchTerm) {
+                    filteredData = filteredData.filter(p => {
+                        const cellValue = p[selectedSearchColumn] || '';
+                        return cellValue.toLowerCase().includes(searchTerm);
+                    });
+                }
+            }
+            
+            currentChartData = filteredData.slice(0, topNValue);
+            profileCountLabel.textContent = `Hiển thị ${currentChartData.length} / ${filteredData.length} profiles`;
+            renderChart(currentChartData);
+        }
+        
+        function renderChart(data) {
+            if (!data || data.length === 0) {
+                chartDiv.innerHTML = '<p style="text-align:center; color: #888; padding: 40px 0;">Không có dữ liệu phù hợp với bộ lọc.</p>';
+                if(chart) chart.destroy();
+                chart = null;
+                return;
+            }
+            const options = {
+                series: [{ name: 'Profile Rating', data: data.map(p => p.profile_rating) }, { name: 'Followers', data: data.map(p => p.Follower) }],
+                chart: { 
+                    type: 'bar', 
+                    height: data.length * 35 + 100, 
+                    toolbar: { show: true },
+                    events: {
+                        dataPointSelection: (event, chartContext, config) => {
+                            const selectedProfile = currentChartData[config.dataPointIndex];
+                            if (selectedProfile) showProfileDetails(selectedProfile);
+                        }
+                    }
+                },
+                plotOptions: { bar: { horizontal: true } },
+                dataLabels: {
+                    enabled: true,
+                    offsetX: 20,
+                    style: { fontSize: '12px', colors: ['#fff'] },
+                    formatter: (val) => formatCompactNumber(val)
+                },
+                title: {
+                    text: `Top ${data.length} Profiles (Filtered)`,
+                    align: 'center',
+                    style: { fontSize: '16px', color: '#263238' }
+                },
+                tooltip: { shared: true, intersect: false, y: { formatter: val => val ? val.toLocaleString('vi-VN') : '0' } },
+                xaxis: { categories: data.map(p => p.Name), labels: { formatter: val => val ? val.toLocaleString('vi-VN') : '0' } },
+                yaxis: { labels: { show: true, maxWidth: 250 } },
+                legend: { position: 'top' },
+                colors: ['#4285F4', '#34A853']
+            };
+            if (chart) {
+                chart.updateOptions(options);
+            } else {
+                chart = new ApexCharts(chartDiv, options);
+                chart.render();
+            }
+        }
+
+        function showProfileDetails(profile) {
+            detailsList.innerHTML = '';
+            previewContainer.innerHTML = createPreviewCard(profile);
+            sidebarOverlay.classList.add('visible');
+            sidebar.classList.add('visible');
+            populateDetailsList(profile);
+        }
+
+        function populateDetailsList(profile) {
+            const fieldsToShow = [
+                { label: 'Rating', key: 'profile_rating', format: 'number' },
+                { label: 'Followers', key: 'Follower', format: 'number' },
+                { label: 'Page Likes', key: 'Page Like', format: 'number' },
+                { label: 'Phân loại', key: 'Phân loại' },
+                { label: 'Giới tính', key: 'Giới tính' },
+                { label: 'Hạng mục', key: 'Hạng mục' },
+                { label: 'Địa chỉ', key: 'Địa chỉ' },
+                { label: 'TB Like', key: 'TB Like', format: 'number' },
+                { label: 'TB Comment', key: 'TB Comment', format: 'number' },
+                { label: 'TB Share', key: 'TB Share', format: 'number' },
+                { label: 'Hashtags', key: 'HashTags' }
+            ];
+
+            detailsList.innerHTML = fieldsToShow.map(field => {
+                let value = profile[field.key] || 'N/A';
+                if (field.format === 'number') value = Number(value).toLocaleString('vi-VN');
+                if (!value || value.toString().trim() === '') value = 'N/A';
+                return `
+                    <div class="detail-item">
+                        <div class="label">${field.label}</div>
+                        <div class="value">${value}</div>
+                    </div>`;
+            }).join('');
+        }
+
+        function createPreviewCard(profile) {
+            const platform = (profile.Platform || '').toLowerCase();
+            const username = getUsernameFromUrl(profile.URL);
+
+            return `
+                <div id="profile-preview-card">
+                    <div class="info">
+                        <div>
+                            <div class="platform">${platform}</div>
+                            <div class="name">${profile.Name}</div>
+                            ${username ? `<div class="username">@${username}</div>` : ''}
+                        </div>
+                    </div>
+                    <md-filled-button href="${profile.URL}" target="_blank">
+                        Xem trang cá nhân
+                        <span slot="icon" class="material-symbols-outlined">open_in_new</span>
+                    </md-filled-button>
+                </div>
+            `;
+        }
+        
+        function hideProfileDetails() {
+            sidebarOverlay.classList.remove('visible');
+            sidebar.classList.remove('visible');
+        }
+
+
+        // --- UTILITIES ---
+        function getUsernameFromUrl(url) {
+            if (!url || typeof url !== 'string') return null;
+            try {
+                const path = new URL(url).pathname;
+                const parts = path.split('/').filter(Boolean);
+                const lastPart = parts[parts.length - 1];
+                if (lastPart && !lastPart.includes('.')) {
+                    return lastPart;
+                }
+                const urlParams = new URL(url).searchParams;
+                return urlParams.get('id') || urlParams.get('user') || lastPart || null;
+            } catch (e) {
+                const parts = url.split('/').filter(Boolean);
+                return parts[parts.length - 1] || null;
+            }
+        }
+
+        function formatCompactNumber(number) {
+            if(!number) return '0';
+            if (number < 1000) return number.toString();
+            const suffixes = ["", "K", "M", "B", "T"];
+            const suffixNum = Math.floor(Math.log10(number) / 3);
+            let shortValue = parseFloat((number / Math.pow(1000, suffixNum)).toPrecision(3));
+            if (shortValue % 1 !== 0) {
+                shortValue = shortValue.toFixed(1);
+            }
+            return shortValue + suffixes[suffixNum];
+        }
+
+        function debounce(func, delay) {
+            let timeout;
+            return function(...args) { clearTimeout(timeout); timeout = setTimeout(() => func.apply(this, args), delay); };
+        }
+        
+        function setupScrollerButtons() {
+            const container = document.getElementById('quick-filters-container');
+            const scroller = document.getElementById('quick-filters-scroller');
+            const leftBtn = document.getElementById('scroll-left-button');
+            const rightBtn = document.getElementById('scroll-right-button');
+            
+            const checkScroll = () => {
+                if (!container || !scroller) return;
+                const hasOverflow = scroller.scrollWidth > container.clientWidth;
+                const atStart = container.scrollLeft < 1;
+                const atEnd = Math.abs(scroller.scrollWidth - container.clientWidth - container.scrollLeft) < 1;
+                
+                leftBtn.classList.toggle('visible', hasOverflow && !atStart);
+                rightBtn.classList.toggle('visible', hasOverflow && !atEnd);
+            };
+
+            leftBtn.addEventListener('click', () => { container.scrollBy({ left: -250, behavior: 'smooth' }); });
+            rightBtn.addEventListener('click', () => { container.scrollBy({ left: 250, behavior: 'smooth' }); });
+            container.addEventListener('scroll', checkScroll, { passive: true });
+            
+            new ResizeObserver(checkScroll).observe(container);
+            checkScroll();
+        }
     </script>
 </body>
+</html>
+
